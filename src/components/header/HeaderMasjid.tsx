@@ -1,3 +1,5 @@
+import Logo from "../../assets/images/logo.svg"
+
 export default function HeaderMasjid({
   nama,
   alamat,
@@ -8,7 +10,7 @@ export default function HeaderMasjid({
   return (
     <div className="flex gap-3 items-center">
       {/* Icon Masjid */}
-      {/* <img src="/icons/masjid.svg" className="w-10 h-10 opacity-90" /> */}
+      <img src={Logo} className="w-12 h-full opacity-90" />
 
       <div>
         <h1 className="text-xl font-bold text-black drop-shadow">

@@ -42,7 +42,7 @@ export default function HeaderTop() {
       />
 
       {/* Divider */}
-      <div className="w-1 h-16 bg-gradient-to-b from-yellow-400 via-yellow-500 to-yellow-600 mx-8 rounded-3xl "></div>
+      <div className= "w-1 h-16 bg-gradient-to-b from-[#FFE100] to-[#FF8C00] mx-8 rounded-3xl "></div>
 
       {/* Kanan */}
       <HeaderTanggal hijriyah={hijriyah} masehi={masehi} />
