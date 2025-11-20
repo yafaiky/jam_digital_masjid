@@ -1,50 +1,61 @@
-import HeaderTop from "../components/header/HeaderTop";
-import ClockBox from "../components/center/ClockBox";
-import CountdownBox from "../components/center/CountdownBox";
-import HadisBox from "../components/center/HadisBox";
-import PrayerSchedule from "../components/jadwal/jadwalSolat";
-import RunningTxt from "../components/footer/RunningText";
-import HariBesar from "../components/header/HariBesar";
+import { useEffect, useState } from "react";
+
+import DefaultPage from "./DashboardDefault";
+import AzanPage from "../components/azan/AzanPage";
+import IqomahPage from "../components/azan/IqomahPage";
+
+import { usePrayerTimes } from "../utils/usePrayerTimes";
+import { playBeepSound } from "../utils/sound";
 
 export default function DashboardJam() {
+  const {
+    preAdzan,
+    isAdzan,
+    isIqomah,
+    iqomahTimer,
+  } = usePrayerTimes();
+
+  const [pageMode, setPageMode] = useState<"default" | "azan" | "iqomah">("default");
+
+  // 1 — PRE ADZAN (10 detik sebelum masuk waktu)
+  useEffect(() => {
+    if (preAdzan) {
+      playBeepSound();
+    }
+  }, [preAdzan]);
+
+  // 2 — MASUK WAKTU ADZAN
+  useEffect(() => {
+    if (isAdzan) {
+      setPageMode("azan");
+    }
+  }, [isAdzan]);
+
+  // 3 — MASUK IQOMAH
+  useEffect(() => {
+    if (isIqomah) {
+      setPageMode("iqomah");
+    }
+  }, [isIqomah]);
+
+  // 4 — KEMBALI KE DEFAULT SETELAH IQOMAH SELESAI
+  useEffect(() => {
+    if (!isIqomah && pageMode === "iqomah") {
+      setPageMode("default");
+    }
+  }, [isIqomah]);
+
   return (
-    <div className="w-full min-h-screen flex flex-col relative">
+    <div className="w-full h-screen overflow-hidden relative">
 
-      {/* Header */}
-      <HeaderTop />
+      {/* DEFAULT */}
+      {pageMode === "default" && <DefaultPage />}
 
-      {/* Hari Besar (di luar header) */}
-      <div className="mr-18"> 
-        <HariBesar event="Maulid Nabi Muhammad SAW - 90 Hari" />
-      </div>
+      {/* AZAN */}
+      {pageMode === "azan" && <AzanPage />}
 
-      {/* MAIN CONTENT */}
-      <div className="flex-1 mt-10 flex justify-center gap-30">
-        {/* KIRI */}
-        <div className="flex flex-col items-center mr-50">
-          <ClockBox />
-
-          <div className="mt-4 w-full flex justify-center">
-            <CountdownBox />
-          </div>
-        </div>
-
-        {/* KANAN */}
-        <div className="max-w-md">
-          <HadisBox />
-        </div>
-      </div>
-
-      {/* FOOTER AREA */}
-      <div className="w-full">
-        <div className="m-0 p-0">
-          <PrayerSchedule />
-        </div>
-
-        <div className="m-0 p-0">
-          <RunningTxt running_text="selamat datang di masjid jpn dimana anda akan bertobat dan bertobat dikarenakan dosa anda yang sudah begitu banyak, sekian dan terima gaji." />
-        </div>
-      </div>
+      {/* IQOMAH */}
+      {pageMode === "iqomah" && <IqomahPage counter={iqomahTimer} />}
     </div>
   );
 }
