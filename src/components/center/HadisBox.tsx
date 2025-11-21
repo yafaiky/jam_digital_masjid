@@ -44,7 +44,7 @@ export default function HadisBox() {
           setSlide("translate-x-0");
         }, 50);
       }, 300);
-    }, 60000); // 1 menit
+    }, 15000); // 1 menit
 
     return () => clearInterval(interval);
   }, []);

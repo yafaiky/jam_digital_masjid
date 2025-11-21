@@ -24,7 +24,7 @@ export default function HariBesar() {
           setSlide("translate-x-0");
         }, 50);
       }, 400);
-    }, 300000); // 5 menit 300000
+    }, 15000); 
 
     return () => clearInterval(interval);
   }, []);

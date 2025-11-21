@@ -8,23 +8,29 @@ import { usePrayerTimes } from "../utils/usePrayerTimes";
 import { playBeepSound } from "../utils/sound";
 
 export default function DashboardJam() {
-  const {
-    preAdzan,
-    isAdzan,
-    isIqomah,
-    iqomahTimer,
-  } = usePrayerTimes();
+  const { preAdzan, isAdzan, isIqomah, iqomahTimer, nextPrayer } =
+    usePrayerTimes();
 
-  const [pageMode, setPageMode] = useState<"default" | "azan" | "iqomah">("default");
+  const [pageMode, setPageMode] = useState<"default" | "azan" | "iqomah">(
+    "default"
+  );
 
-  // 1 — PRE ADZAN (10 detik sebelum masuk waktu)
+  const [lastPlayedPrayer, setLastPlayedPrayer] = useState<string | null>(null);
+
+  // ⬇️ TARUH LOG INI DI SINI
   useEffect(() => {
-    if (preAdzan) {
-      playBeepSound();
-    }
-  }, [preAdzan]);
+    console.log("STATE:", { preAdzan, isAdzan, isIqomah, iqomahTimer });
+  }, [preAdzan, isAdzan, isIqomah, iqomahTimer]);
 
-  // 2 — MASUK WAKTU ADZAN
+  // 1 — PRE ADZAN
+  useEffect(() => {
+    if (preAdzan && nextPrayer && nextPrayer !== lastPlayedPrayer) {
+      playBeepSound();
+      setLastPlayedPrayer(nextPrayer);
+    }
+  }, [preAdzan, nextPrayer, lastPlayedPrayer]);
+
+  // 2 — MASUK ADZAN
   useEffect(() => {
     if (isAdzan) {
       setPageMode("azan");
@@ -38,23 +44,17 @@ export default function DashboardJam() {
     }
   }, [isIqomah]);
 
-  // 4 — KEMBALI KE DEFAULT SETELAH IQOMAH SELESAI
+  // 4 — KEMBALI KE DEFAULT SETELAH IQOMAH
   useEffect(() => {
     if (!isIqomah && pageMode === "iqomah") {
       setPageMode("default");
     }
-  }, [isIqomah]);
+  }, [isIqomah, pageMode]);
 
   return (
     <div className="w-full h-screen overflow-hidden relative">
-
-      {/* DEFAULT */}
       {pageMode === "default" && <DefaultPage />}
-
-      {/* AZAN */}
       {pageMode === "azan" && <AzanPage />}
-
-      {/* IQOMAH */}
       {pageMode === "iqomah" && <IqomahPage counter={iqomahTimer} />}
     </div>
   );

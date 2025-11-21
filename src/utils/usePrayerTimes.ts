@@ -4,8 +4,8 @@ export function usePrayerTimes() {
   const prayerTimes = [
     { name: "Imsak", time: "04:02" },
     { name: "Shubuh", time: "05:25" },
-    { name: "Dzuhur", time: "11:38" },
-    { name: "Ashar", time: "15:01" },
+    { name: "Dzuhur", time: "11:41" },
+    { name: "Ashar", time: "15:44" },
     { name: "Maghrib", time: "17:51" },
     { name: "Isya", time: "19:05" },
   ];
@@ -65,43 +65,38 @@ export function usePrayerTimes() {
           s
         ).padStart(2, "0")}`
       );
+     
+      // --- PRE ADZAN 10 DETIK ---
+      setPreAdzan(diff <= 10000 && diff > 0);
 
-      // ========== LOGIKA ADZAN & IQOMAH ==========
-
-      // 10 detik sebelum masuk waktu adzan
-      if (diff <= 10000 && diff > 0) {
-        setPreAdzan(true);
-      } else {
-        setPreAdzan(false);
-      }
-
-      // Saat adzan (tepat 00:00:00 selama 10 detik)
+      // --- LOGIKA ADZAN DAN IQOMAH ---
       if (diff <= 0 && diff > -10000) {
+        // Adzan
         setIsAdzan(true);
         setIsIqomah(false);
-      } else if (diff <= -10000 && !isIqomah) {
+      } else if (diff <= -10000) {
+        // Iqomah
         setIsAdzan(false);
-        setIsIqomah(true);
-        setIqomahTimer(600); // 10 menit
+        if (!isIqomah) {
+          setIsIqomah(true);
+          setIqomahTimer(600); // 10 menit
+        }
       }
 
       // Hitung mundur iqomah
-      if (isIqomah) {
-        setIqomahTimer((t) => {
-          if (t <= 1) {
-            setIsIqomah(false);
-            return 0;
-          }
-          return t - 1;
-        });
+      if (isIqomah && iqomahTimer > 0) {
+        setIqomahTimer((t) => t - 1);
+      } else if (isIqomah && iqomahTimer === 0) {
+        setIsIqomah(false);
       }
     }
 
+    // Jalankan langsung + setInterval
     updateTimes();
     const interval = setInterval(updateTimes, 1000);
-
     return () => clearInterval(interval);
-  }, [isIqomah]);
+  }, []); 
+
 
   return {
     prayerTimes,

@@ -3,9 +3,9 @@ import moment from "moment-hijri";
 export function getHijriyahDate() {
   const today = moment();
 
-  const day = today.iDate();       // tanggal hijriyah
-  const month = today.iMonth();    // index bulan 0–11
-  const year = today.iYear();      // tahun hijriyah
+  const day = today.iDate();
+  const month = today.iMonth();
+  const year = today.iYear();
 
   const bulan = [
     "Muharram",
