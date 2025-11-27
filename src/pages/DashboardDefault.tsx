@@ -5,10 +5,16 @@ import HadisBox from "../components/center/HadisBox";
 import PrayerSchedule from "../components/jadwal/jadwalSolat";
 import RunningTxt from "../components/footer/RunningText";
 import HariBesar from "../components/header/HariBesar";
+import BackgroundLayer from "../components/background/BackgroundLayer";
+
 
 export default function DashboardDefault() {
   return (
     <div className="w-full min-h-screen flex flex-col relative">
+
+
+      {/* Background + overlay */}
+      <BackgroundLayer />
 
       {/* Header */}
       <HeaderTop />
@@ -16,6 +22,7 @@ export default function DashboardDefault() {
       {/* Hari Besar (di luar header) */}
       <div className="mr-18"> 
         <HariBesar />
+
       </div>
 
       {/* MAIN CONTENT */}

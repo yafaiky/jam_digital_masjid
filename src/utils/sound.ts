@@ -1,5 +1,13 @@
+const audio = new Audio("/sounds/beep.mp3");
+
+export function initAudio() {
+  audio.play().then(() => {
+    audio.pause();
+    audio.currentTime = 0;
+    console.log("Audio unlocked");
+  });
+}
+
 export function playBeepSound() {
-  const beep = new Audio("/sounds/beep.mp3");
-  beep.volume = 1.0;
-  beep.play().catch(() => {});
+  audio.play().catch(err => console.log("Audio blocked:", err));
 }
