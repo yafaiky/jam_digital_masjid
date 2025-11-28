@@ -3,10 +3,8 @@ import { useEffect, useState } from "react";
 export function useBannerMode(pageMode: string) {
   const [bannerIndex, setBannerIndex] = useState(0);
   const [defaultStartTime, setDefaultStartTime] = useState<number | null>(null);
-
   const [bannerStartTime, setBannerStartTime] = useState<number | null>(null);
 
-  // Dipanggil dari DashboardJam ketika masuk default
   const startDefaultTimer = () => {
     setDefaultStartTime(Date.now());
     setBannerIndex(0);
@@ -16,20 +14,20 @@ export function useBannerMode(pageMode: string) {
   const shouldEnterBanner =
     pageMode === "default" &&
     defaultStartTime !== null &&
-    (Date.now() - defaultStartTime) / 1000 >= 120;
+    (Date.now() - defaultStartTime) / 1000 >= 300;
 
   useEffect(() => {
     if (pageMode === "banner") {
-      setBannerStartTime(Date.now()); // catat kapan banner mulai
+      setBannerStartTime(Date.now());
     }
   }, [pageMode]);
 
-  // ===== 2 — Pindah banner setiap 30 detik =====
+  // ===== 2 — Ganti banner tiap 30 detik (LOOP) =====
   useEffect(() => {
     if (pageMode !== "banner") return;
 
     const interval = setInterval(() => {
-      setBannerIndex((i) => Math.min(i + 1, 4));
+      setBannerIndex((i) => (i + 1) % 5); // loop 0 → 1 → 2 → 3 → 4 → 0
     }, 30000);
 
     return () => clearInterval(interval);

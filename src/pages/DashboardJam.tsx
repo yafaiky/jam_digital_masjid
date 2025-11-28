@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import DefaultPage from "./DashboardDefault";
 import AzanPage from "../components/azan/AzanPage";
 import IqomahPage from "../components/azan/IqomahPage";
+import KomatPage from "../components/azan/KomatPage";
+import BlankPage from "../components/azan/BlankPage";
 import BannerPage from "../components/banner/bannerPage";
 
 import { usePrayerTimes } from "../utils/usePrayerTimes";
@@ -10,11 +12,18 @@ import { useBannerMode } from "../utils/useBannerMode";
 import { playBeepSound } from "../utils/sound";
 
 export default function DashboardJam() {
-  const { preAdzan, isAdzan, isIqomah, iqomahTimer, nextPrayer } =
-    usePrayerTimes();
+  const {
+    preAdzan,
+    isAdzan,
+    isIqomah,
+    iqomahTimer,
+    isKomat,
+    blankPage,
+    nextPrayer,
+  } = usePrayerTimes();
 
   const [pageMode, setPageMode] = useState<
-    "default" | "azan" | "iqomah" | "banner"
+    "default" | "azan" | "iqomah" | "komat" | "blank" | "banner"
   >("default");
 
   const [lastPlayedPrayer, setLastPlayedPrayer] = useState<string | null>(null);
@@ -28,16 +37,25 @@ export default function DashboardJam() {
   } = useBannerMode(pageMode);
 
   console.log(
-  "PRE:", preAdzan,
-  "| ADZAN:", isAdzan,
-  "| IQOMAH:", isIqomah,
-  "| TIMER:", iqomahTimer,
-  "| NEXT:", nextPrayer,
-  "| MODE:", pageMode,
-  "| BANNER INDEX:", bannerIndex,
-);
+    "PRE:",
+    preAdzan,
+    "| ADZAN:",
+    isAdzan,
+    "| IQOMAH:",
+    isIqomah,
+    "| KOMAT:",
+    isKomat,
+    "| IQOMAH TIMER:",
+    iqomahTimer,
+    "| NEXT:",
+    nextPrayer,
+    "| MODE:",
+    pageMode,
+    "| BANNER INDEX:",
+    bannerIndex
+  );
 
-  // PRE ADZAN
+  // PRE ADZAN - bunyikan beep 1x
   useEffect(() => {
     if (preAdzan && nextPrayer && nextPrayer !== lastPlayedPrayer) {
       playBeepSound();
@@ -55,32 +73,63 @@ export default function DashboardJam() {
     if (isIqomah) setPageMode("iqomah");
   }, [isIqomah]);
 
-  // SELESAI IQOMAH -> default + mulai timer banner
+  // MASUK KOMAT
+  useEffect(() => {
+    if (isKomat) setPageMode("komat");
+  }, [isKomat]);
+
+  // MASUK BLANK PAGE
+  useEffect(() => {
+    if (blankPage) setPageMode("blank");
+  }, [blankPage]);
+
+  // IQOMAH selesai → biarkan usePrayerTimes mengatur lanjutannya
   useEffect(() => {
     if (!isIqomah && pageMode === "iqomah") {
-      setPageMode("default");
-      startDefaultTimer();
+      /* no-op */
     }
   }, [isIqomah, pageMode]);
 
-  // DEFAULT -> masuk banner setelah 5 menit
+  // KOMAT selesai → biarkan lanjut ke blank page
+  useEffect(() => {
+    if (!isKomat && pageMode === "komat") {
+      /* no-op */
+    }
+  }, [isKomat, pageMode]);
+
+  // BLANK → selesai → kembali DEFAULT (TANPA startDefaultTimer)
+  useEffect(() => {
+    if (!blankPage && pageMode === "blank") {
+      setPageMode("default");
+    }
+  }, [blankPage, pageMode]);
+
+  // DEFAULT → masuk Banner
   useEffect(() => {
     if (shouldEnterBanner) setPageMode("banner");
   }, [shouldEnterBanner]);
 
-  // BANNER -> kembali default setelah 2.5 menit
+  // BANNER selesai → kembali DEFAULT (TANPA startDefaultTimer)
   useEffect(() => {
     if (shouldExitBanner && pageMode === "banner") {
       setPageMode("default");
-      startDefaultTimer();
     }
   }, [shouldExitBanner, pageMode]);
+
+  // RESET timer banner SETIAP masuk DEFAULT
+  useEffect(() => {
+    if (pageMode === "default") {
+      startDefaultTimer();
+    }
+  }, [pageMode]);
 
   return (
     <div className="w-full h-screen overflow-hidden relative">
       {pageMode === "default" && <DefaultPage />}
       {pageMode === "azan" && <AzanPage />}
       {pageMode === "iqomah" && <IqomahPage counter={iqomahTimer} />}
+      {pageMode === "komat" && <KomatPage />}
+      {pageMode === "blank" && <BlankPage />}
       {pageMode === "banner" && <BannerPage index={bannerIndex} />}
     </div>
   );
