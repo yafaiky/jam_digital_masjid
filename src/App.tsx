@@ -1,12 +1,12 @@
-// import MainLayout from "./layout/mainLayout";
-import Home from "./pages/DashboardJam";
+import { Routes, Route } from "react-router-dom";
+import DashboardJam from "./pages/DashboardJam";
+import Admin from "./pages/AdminPanelDkm";
 
-function App() {
+export default function App() {
   return (
-    // <MainLayout>
-      <Home />
-    // </MainLayout>
+    <Routes>
+      <Route path="/" element={<DashboardJam />} />
+      <Route path="/admin" element={<Admin />} />
+    </Routes>
   );
 }
-
-export default App;

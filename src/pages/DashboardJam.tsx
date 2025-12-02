@@ -36,24 +36,24 @@ export default function DashboardJam() {
     shouldExitBanner,
   } = useBannerMode(pageMode);
 
-  // console.log(
-  //   "PRE:",
-  //   preAdzan,
-  //   "| ADZAN:",
-  //   isAdzan,
-  //   "| IQOMAH:",
-  //   isIqomah,
-  //   "| KOMAT:",
-  //   isKomat,
-  //   "| IQOMAH TIMER:",
-  //   iqomahTimer,
-  //   "| NEXT:",
-  //   nextPrayer,
-  //   "| MODE:",
-  //   pageMode,
-  //   "| BANNER INDEX:",
-  //   bannerIndex
-  // );
+  console.log(
+    "PRE:",
+    preAdzan,
+    "| ADZAN:",
+    isAdzan,
+    "| IQOMAH:",
+    isIqomah,
+    "| KOMAT:",
+    isKomat,
+    "| IQOMAH TIMER:",
+    iqomahTimer,
+    "| NEXT:",
+    nextPrayer,
+    "| MODE:",
+    pageMode,
+    "| BANNER INDEX:",
+    bannerIndex
+  );
 
   // PRE ADZAN - bunyikan beep 1x
   useEffect(() => {
