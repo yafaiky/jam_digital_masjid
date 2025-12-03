@@ -55,7 +55,7 @@ export default function DashboardDefault() {
       {/* Footer */}
       <div className="w-full">
         <PrayerSchedule />
-        <RunningTxt running_text="selamat datang di masjid jpn dimana anda akan bertobat dan bertobat..." />
+        <RunningTxt running_text="selamat datang di masjid jpn dimana anda akan bertobat dan bertobat. karna dosa anata sangat banyak woy sering haluin yang kaga nyata mulu wibuu." />
       </div>
 
     </div>

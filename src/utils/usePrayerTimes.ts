@@ -150,7 +150,7 @@ export function usePrayerTimes() {
           if (prev <= 1) {
             setIsKomat(false);
             setBlankPage(true);
-            setBlankTimer(600);
+            setBlankTimer(60);
             return 0;
           }
           return prev - 1;
