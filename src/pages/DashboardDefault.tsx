@@ -16,7 +16,7 @@ import RightDrawer from "../components/slidingPanel/RightDrawer";
 export default function DashboardDefault() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  return (
+  return (  
     <div className="w-full min-h-screen flex flex-col relative">
 
       {/* Background */}
