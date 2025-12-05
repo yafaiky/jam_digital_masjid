@@ -1,52 +1,40 @@
-// src/pages/Login.tsx
-import { useState } from "react";
-import api from "../../api/axios";
+// src/pages/login/Login.tsx
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [device, setDevice] = useState("hp");
-
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  async function submit(e: React.FormEvent) {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const body = { username, password, device };
+    const username = e.target.username.value;
+    const password = e.target.password.value;
+    const device = e.target.device.value; // "hp" atau "tv"
 
-    try {
-      const res = await api.post("/login", body);
+    const res = await axios.post("http://localhost:8080/login", {
+      username,
+      password,
+      device,
+    });
 
-      // backend balikin role = "admin" atau "dkm"
-      if (res.data.role === "admin") navigate("/admin");
-      else if (res.data.role === "dkm") navigate("/dkm");
-      else alert("Role tidak dikenal");
+    login(res.data.token, res.data.role);
 
-    } catch (err: any) {
-      alert(err.response?.data?.error || "Login gagal");
-    }
-  }
+    // 🚀 Redirect otomatis sesuai role
+    navigate(`/${res.data.role}`);
+  };
 
   return (
-    <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      <h2>Login</h2>
+    <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: 10 }}>
+      <input name="username" placeholder="username" />
+      <input name="password" placeholder="password" type="password" />
 
-      <input 
-        placeholder="username"
-        onChange={(e) => setUsername(e.target.value)}
-      />
-
-      <input 
-        type="password" 
-        placeholder="password" 
-        onChange={(e) => setPassword(e.target.value)} 
-      />
-
-      {/* device bebas, tapi default 'hp' seperti model kamu */}
-      <select value={device} onChange={(e) => setDevice(e.target.value)}>
-        <option value="hp">HP</option>
-        <option value="display">Display</option>
+      {/* pilih login HP atau TV */}
+      <select name="device">
+        <option value="hp">HP (Admin DKM)</option>
+        <option value="tv">TV (Display)</option>
       </select>
 
       <button type="submit">Login</button>

@@ -62,7 +62,7 @@ export default function RightDrawer({
           active:scale-95
         "
       >
-        Admin Panel
+        DKM Admin Panel
       </button>
     </div>
   );

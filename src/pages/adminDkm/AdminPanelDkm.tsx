@@ -34,19 +34,19 @@ export default function AdminLayout() {
 
         {/* MENU */}
         <nav className="flex flex-col gap-2 flex-1">
-          <AdminMenuItem to="/admin/header" icon={<FaCog />}>
+          <AdminMenuItem to="/dkm/header" icon={<FaCog />}>
             Header
           </AdminMenuItem>
 
-          <AdminMenuItem to="/admin/middle" icon={<FaListUl />}>
+          <AdminMenuItem to="/dkm/middle" icon={<FaListUl />}>
             Middle
           </AdminMenuItem>
 
-          <AdminMenuItem to="/admin/hadist" icon={<FaBook />}>
+          <AdminMenuItem to="/dkm/hadist" icon={<FaBook />}>
             Hadist
           </AdminMenuItem>
 
-          <AdminMenuItem to="/admin/banner" icon={<FaImage />}>
+          <AdminMenuItem to="/dkm/banner" icon={<FaImage />}>
             Banner
           </AdminMenuItem>
         </nav>
