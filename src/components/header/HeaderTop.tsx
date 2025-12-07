@@ -36,10 +36,7 @@ export default function HeaderTop() {
     "
     >
       {/* Kiri */}
-      <HeaderMasjid
-        nama="Masjid JPN"
-        alamat="Jl. Btn Cijujung Permai No.11, Sukaraja, Bogor"
-      />
+      <HeaderMasjid />
 
       {/* Divider */}
       <div className= "w-1 h-16 bg-gradient-to-b from-[#FFE100] to-[#FF8C00] mx-8 rounded-3xl "></div>

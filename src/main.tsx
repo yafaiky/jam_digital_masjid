@@ -2,10 +2,16 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import App from "./App";
+// import App from "./App";
+import Protected from "./routes/RedirectRoot";
 import Login from "./pages/login/Login";
 
-import AdminLayout from "./pages/adminDkm/AdminPanelDkm";
+// display
+import DisplayMasjid from "./pages/DisplayMasjidDkm/DashboardJam"
+
+// import DisplayAdmin from "./App";
+import AdminJapin from "./pages/adminJapin/adminJapin";
+import AdminLayout from "./pages/adminDkm/AdminPanelDkm"; 
 import HeaderSetting from "./pages/adminDkm/HeaderSetting";
 import MiddleSetting from "./pages/adminDkm/MiddleSetting";
 import HadistSetting from "./pages/adminDkm/HadistSetting";
@@ -24,7 +30,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/login" element={<Login />} />
 
         {/* JAM MASJID (public) */}
-        <Route path="/" element={<App />} />
+        <Route path="/" element={<Protected />} />
 
         {/* DKM DASHBOARD */}
         <Route
@@ -35,7 +41,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             </RequireRole>
           }
         >
-          <Route index element={<Navigate to="header" replace />} />
+          <Route index element={<Navigate to="header" replace />} />  
+          {/* <Route path="dkm" element={<AdminLayout />} /> */}
           <Route path="header" element={<HeaderSetting />} />
           <Route path="middle" element={<MiddleSetting />} />
           <Route path="hadist" element={<HadistSetting />} />
@@ -47,7 +54,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           path="/admin"
           element={
             <RequireRole expected="admin">
-              <div>Super Admin Dashboard</div>
+              <AdminJapin /> 
             </RequireRole>
           }
         />
@@ -57,7 +64,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           path="/display"
           element={
             <RequireRole expected="display">
-              <div>HALAMAN DISPLAY</div>
+              <DisplayMasjid />
             </RequireRole>
           }
         />

@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 
 import DefaultPage from "./DashboardDefault";
-import AzanPage from "../components/azan/AzanPage";
-import IqomahPage from "../components/azan/IqomahPage";
-import KomatPage from "../components/azan/KomatPage";
-import BlankPage from "../components/azan/BlankPage";
-import BannerPage from "../components/banner/bannerPage";
+import AzanPage from "../../components/azan/AzanPage";
+import IqomahPage from "../../components/azan/IqomahPage";
+import KomatPage from "../../components/azan/KomatPage";
+import BlankPage from "../../components/azan/BlankPage";
+import BannerPage from "../../components/banner/bannerPage";
 
-import { usePrayerTimes } from "../utils/usePrayerTimes";
-import { useBannerMode } from "../utils/useBannerMode";
-import { playBeepSound } from "../utils/sound";
+import { usePrayerTimes } from "../../utils/usePrayerTimes";
+import { useBannerMode } from "../../utils/useBannerMode";
+import { playBeepSound } from "../../utils/sound";
 
 export default function DashboardJam() {
   const {

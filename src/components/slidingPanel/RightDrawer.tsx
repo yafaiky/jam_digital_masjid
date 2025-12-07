@@ -16,7 +16,7 @@ export default function RightDrawer({
       btn.classList.add("scale-95");
       setTimeout(() => {
         btn.classList.remove("scale-95");
-        navigate("/admin"); // berpindah halaman
+        navigate("/dkm"); // berpindah halaman
       }, 120);
     }
   };
