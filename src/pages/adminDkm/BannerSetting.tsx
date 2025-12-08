@@ -1,29 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import  { getBanners, updateBanner } from "../../services/bannerClient";
+import type { Banner } from "../../services/bannerClient";
 
 export default function BannerSetting() {
   const MAX_SIZE_MB = 5;
   const MAX_SIZE = MAX_SIZE_MB * 1024 * 1024;
 
+  const token = localStorage.getItem("token") || "";
+
   type BannerItem = {
     id: number;
     image: string;
     preview: string | null;
-    fileType?: string; // ← tambahkan untuk mengetahui apakah file video atau gambar
+    fileType?: string;
+    file?: File;
   };
 
-  const [banners, setBanners] = useState<BannerItem[]>([
-    { id: 1, image: "/banner/banner1.jpg", preview: null },
-    { id: 2, image: "/banner/banner2.jpg", preview: null },
-    { id: 3, image: "/banner/banner3.jpg", preview: null },
-    { id: 4, image: "/banner/banner4.jpg", preview: null },
-    { id: 5, image: "/banner/banner5.jpg", preview: null },
-  ]);
+  const [banners, setBanners] = useState<BannerItem[]>([]);
 
-  // ==== UPLOAD HANDLER ====
+  // ========================
+  // LOAD BANNER DARI BACKEND
+  // ========================
+  const loadBanners = async () => {
+    try {
+      const data = await getBanners(token);
+
+      const mapped: BannerItem[] = data.map((b: Banner) => ({
+        id: b.id,
+        image: b.path,
+        preview: null,
+      }));
+
+      setBanners(mapped);
+    } catch (err) {
+      console.error("Gagal load banner:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (token) loadBanners();
+  }, [token]);
+
+  // ====================
+  // HANDLE FILE UPLOAD
+  // ====================
   const handleBannerUpload = (id: number, file: File) => {
     if (!file) return;
 
-    // batas ukuran
     if (file.size > MAX_SIZE) {
       alert(`Ukuran file terlalu besar! Max ${MAX_SIZE_MB}MB`);
       return;
@@ -34,10 +57,29 @@ export default function BannerSetting() {
     setBanners((prev) =>
       prev.map((b) =>
         b.id === id
-          ? { ...b, preview: previewURL, fileType: file.type } // ← simpan tipe file
+          ? { ...b, preview: previewURL, fileType: file.type, file }
           : b
       )
     );
+  };
+
+  // ====================
+  // SAVE KE SERVER (PUT)
+  // ====================
+  const handleSave = async () => {
+    try {
+      for (const banner of banners) {
+        if (banner.file) {
+          await updateBanner(banner.id, banner.file, token);
+        }
+      }
+
+      alert("Semua banner berhasil disimpan");
+      await loadBanners();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menyimpan banner");
+    }
   };
 
   return (
@@ -48,7 +90,7 @@ export default function BannerSetting() {
         <h2 className="text-lg font-bold mb-4">Kelola Banner Masjid</h2>
 
         <p className="text-black/70 mb-6">
-          Anda bisa mengubah 5 banner tampilan masjid. Maksimal ukuran file:{" "}
+          Anda bisa mengubah banner tampilan masjid. Maksimal ukuran file:{" "}
           <b>{MAX_SIZE_MB}MB</b>.
         </p>
 
@@ -57,11 +99,9 @@ export default function BannerSetting() {
             <div key={b.id} className="bg-white p-5 rounded-xl shadow border">
               <h3 className="font-bold mb-3">Banner {b.id}</h3>
 
-              {/* PREVIEW 16:9 */}
+              {/* PREVIEW */}
               <div className="mb-3">
                 <div className="w-full aspect-video rounded-xl overflow-hidden shadow border bg-gray-200">
-
-                  {/* Jika video */}
                   {b.preview && b.fileType?.includes("video") ? (
                     <video
                       src={b.preview}
@@ -69,18 +109,16 @@ export default function BannerSetting() {
                       controls
                     />
                   ) : (
-                    // Jika gambar
                     <img
                       src={b.preview ?? b.image}
                       alt="preview banner"
                       className="w-full h-full object-cover"
                     />
                   )}
-
                 </div>
               </div>
 
-              {/* FILE UPLOAD BOX */}
+              {/* UPLOAD BOX */}
               <label className="block">
                 <div
                   className="flex flex-col items-center justify-center p-6 border-2 border-dashed 
@@ -99,9 +137,10 @@ export default function BannerSetting() {
 
                 <input
                   type="file"
-                  accept="image/*,video/mp4,video/webm"   // ← support video
+                  accept="image/*,video/mp4,video/webm"
                   onChange={(e) =>
-                    handleBannerUpload(b.id, e.target.files?.[0]!)
+                    e.target.files?.[0] &&
+                    handleBannerUpload(b.id, e.target.files[0])
                   }
                   className="hidden"
                 />
@@ -109,7 +148,9 @@ export default function BannerSetting() {
             </div>
           ))}
         </div>
-         <button
+
+        <button
+          onClick={handleSave}
           className="mt-6 px-6 py-3 bg-yellow-400 hover:bg-yellow-300 
                      text-black font-semibold rounded-2xl shadow transition"
         >
