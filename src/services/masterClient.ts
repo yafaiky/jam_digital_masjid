@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export async function getClient(token: string) {
   const res = await fetch(`${API_URL}/tenant/client`, {
@@ -9,20 +9,29 @@ export async function getClient(token: string) {
   });
 
   if (!res.ok) throw new Error("Gagal mengambil data");
-
   return res.json();
 }
 
-export async function updateClient(data: {
+export type UpdateClientPayload = {
   name?: string;
   location?: string;
   logo?: File | null;
-}, token: string) {
+  running_text?: string;
+  config_background?: File | null;
+};
+
+export async function updateClient(
+  data: UpdateClientPayload,
+  token: string
+) {
   const formData = new FormData();
 
   if (data.name) formData.append("name", data.name);
   if (data.location) formData.append("location", data.location);
   if (data.logo) formData.append("logo", data.logo);
+  if (data.running_text) formData.append("running_text", data.running_text);
+  if (data.config_background)
+    formData.append("config_background", data.config_background);
 
   const res = await fetch(`${API_URL}/tenant/client`, {
     method: "PUT",
@@ -33,6 +42,5 @@ export async function updateClient(data: {
   });
 
   if (!res.ok) throw new Error("Gagal update data");
-
   return res.json();
 }

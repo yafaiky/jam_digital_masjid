@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getClient, updateClient } from "../../services/masterClient";
 
 export default function MiddleSetting() {
   const [backgroundPreview, setBackgroundPreview] = useState<string | null>(null);
@@ -9,6 +10,7 @@ export default function MiddleSetting() {
 
   const handleUploadBackground = (file: File | undefined) => {
     if (!file) return;
+
     const url = URL.createObjectURL(file);
     setBackgroundPreview(url);
     setBackgroundFile(file);
@@ -16,24 +18,13 @@ export default function MiddleSetting() {
 
   const handleSave = async () => {
     try {
-      const formData = new FormData();
-      if (backgroundFile) {
-        formData.append("background", backgroundFile);
-      }
-      formData.append("running_text", runningText);
-
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/tenant/client`,
+      await updateClient(
         {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
+          running_text: runningText,
+          config_background: backgroundFile,
+        },
+        token
       );
-
-      if (!res.ok) throw new Error("Gagal menyimpan");
 
       alert("Berhasil disimpan");
     } catch (err) {
@@ -42,12 +33,30 @@ export default function MiddleSetting() {
     }
   };
 
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await getClient(token);
+
+        // Kalau API langsung kirim field
+        setRunningText(data.running_text || "");
+
+        if (data.config_background) {
+          setBackgroundPreview(data.config_background);
+        }
+      } catch (err) {
+        console.error("Gagal load data:", err);
+      }
+    };
+
+    if (token) loadData();
+  }, [token]);
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8">Middle Setting</h1>
 
       <div className="bg-yellow-100 p-8 rounded-3xl border-t-20 border-yellow-400 shadow-lg">
-
         <h2 className="text-xl font-bold mb-6">Pengaturan Background</h2>
 
         <div className="mb-5">
@@ -56,6 +65,7 @@ export default function MiddleSetting() {
               <img
                 src={backgroundPreview}
                 className="w-full h-full object-cover"
+                alt="Preview background"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-black/40">
@@ -66,10 +76,14 @@ export default function MiddleSetting() {
         </div>
 
         <label className="block mb-10">
-          <div className="p-6 border-2 max-w-md border-dashed border-yellow-500 rounded-2xl
+          <div
+            className="p-6 border-2 max-w-md border-dashed border-yellow-500 rounded-2xl
                        flex flex-col items-center justify-center bg-white hover:bg-yellow-50
-                       transition cursor-pointer shadow-sm">
-            <p className="font-semibold text-black">Klik untuk unggah background</p>
+                       transition cursor-pointer shadow-sm"
+          >
+            <p className="font-semibold text-black">
+              Klik untuk unggah background
+            </p>
             <p className="text-xs text-black/60 mt-1">Max size: 2 MB</p>
             <p className="text-xs text-black/40">Format: JPG • PNG • WebP</p>
           </div>
@@ -97,7 +111,7 @@ export default function MiddleSetting() {
           placeholder="Masukkan teks berjalan..."
           value={runningText}
           onChange={(e) => setRunningText(e.target.value)}
-        ></textarea>
+        />
 
         <button
           onClick={handleSave}
@@ -106,7 +120,6 @@ export default function MiddleSetting() {
         >
           Simpan Perubahan
         </button>
-
       </div>
     </div>
   );

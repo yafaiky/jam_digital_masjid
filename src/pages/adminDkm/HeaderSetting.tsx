@@ -7,7 +7,7 @@ export default function HeaderSetting() {
   const [logo, setLogo] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const token = localStorage.getItem("token") || "";
+  const token = localStorage.getItem("token") || "";  
 
   // Ambil data saat halaman dibuka
   useEffect(() => {
@@ -94,6 +94,7 @@ export default function HeaderSetting() {
                   src={URL.createObjectURL(logo)}
                   alt="Preview Logo"
                   className="mt-3 w-32 h-32 object-contain rounded"
+                  // onChange={(e) => setLogo(e.target.value)}
                 />
               )}
             </div>

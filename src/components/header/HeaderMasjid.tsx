@@ -22,6 +22,9 @@ export default function HeaderMasjid() {
     }
 
     loadData();
+
+    const interval = setInterval(loadData, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const logoUrl = logo
