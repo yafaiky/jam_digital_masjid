@@ -28,7 +28,7 @@ export default function HeaderMasjid() {
   }, []);
 
   const logoUrl = logo
-  ? `${import.meta.env.VITE_API_URL}/images/${logo}`
+  ? `${import.meta.env.VITE_API_URL}/storage/${logo}`
   : "/logo.png";
 
   return (

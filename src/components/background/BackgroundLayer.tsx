@@ -24,7 +24,7 @@ export default function BackgroundLayer() {
   }, []);
 
   const backgroundUrl = background
-  ? `${import.meta.env.VITE_API_URL}/images/${background}`
+  ? `${import.meta.env.VITE_API_URL}/storage/${background}`
   : "background.jpg";
 
 

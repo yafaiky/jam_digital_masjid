@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import  { getBanners, updateBanner } from "../../services/bannerClient";
+import { getBanners, updateBanner } from "../../services/bannerClient";
 import type { Banner } from "../../services/bannerClient";
 
 export default function BannerSetting() {
@@ -26,8 +26,8 @@ export default function BannerSetting() {
       const data = await getBanners(token);
 
       const mapped: BannerItem[] = data.map((b: Banner) => ({
-        id: b.id,
-        image: b.path,
+        id: b.ID, 
+        image: b.Path, 
         preview: null,
       }));
 
@@ -104,12 +104,14 @@ export default function BannerSetting() {
                 <div className="w-full aspect-video rounded-xl overflow-hidden shadow border bg-gray-200">
                   {b.preview && b.fileType?.includes("video") ? (
                     <video
+                      key={`video-${b.id}-${b.preview}`}
                       src={b.preview}
                       className="w-full h-full object-cover"
                       controls
                     />
                   ) : (
                     <img
+                      key={`image-${b.id}-${b.preview ?? b.image}`}
                       src={b.preview ?? b.image}
                       alt="preview banner"
                       className="w-full h-full object-cover"
