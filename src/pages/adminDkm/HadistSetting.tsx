@@ -1,33 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getHadists, toggleHadist } from "../../services/hadistClient";
+import type { Hadist } from "../../services/hadistClient";
 
 export default function HadisSetting() {
-  const [hadisList, setHadisList] = useState([
-    {
-      id: 1,
-      text: "Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia lainnya.",
-      source: "(HR. Tirmidzi)",
-      enabled: true,
-    },
-    {
-      id: 2,
-      text: "Sesungguhnya Allah tidak melihat rupa dan hartamu, tetapi melihat hati dan amalmu.",
-      source: "(HR. Muslim)",
-      enabled: true,
-    },
-    {
-      id: 3,
-      text: "Barangsiapa beriman kepada Allah dan hari akhir maka berkatalah yang baik atau diam.",
-      source: "(HR. Bukhari dan Muslim)",
-      enabled: false,
-    },
-  ]);
+  const [hadisList, setHadisList] = useState<Hadist[]>([]);
+  const token = localStorage.getItem("token") || "";
 
-  const toggleHadis = (id: number) => {
-    setHadisList(
-      hadisList.map((h) =>
-        h.id === id ? { ...h, enabled: !h.enabled } : h
-      )
+  useEffect(() => {
+    if (!token) return;
+
+    const load = async () => {
+      const data = await getHadists(token);
+      setHadisList(data);
+    };
+
+    load();
+  }, [token]);
+
+  const toggle = async (id: number) => {
+    const updated = hadisList.map((h) =>
+      h.id === id ? { ...h, disabled: !h.disabled } : h
     );
+
+    setHadisList(updated);
+
+    const target = updated.find((h) => h.id === id);
+    if (!target) return;
+
+    await toggleHadist(id, target.disabled, token);
   };
 
   return (
@@ -40,44 +40,33 @@ export default function HadisSetting() {
         <p className="mb-6 text-black/70">
           Aktifkan atau nonaktifkan hadist yang ingin ditampilkan pada layar masjid.
         </p>
-
-        {/* LIST HADIST */}
-        <div className="space-y-5">
-          {hadisList.map((hadis) => (
-            <div
-              key={hadis.id}
-              className="bg-white p-5 rounded-2xl shadow border hover:shadow-lg 
-              transition-all duration-300 flex justify-between items-center"
-            >
-              {/* TEKS HADIST */}
-              <div className="flex-1 pr-6">
-                <p className="font-semibold text-black/85 leading-relaxed">
-                  {hadis.text}
-                </p>
-                <p className="text-black/50 text-sm mt-1 italic">
-                  {hadis.source}
-                </p>
-              </div>
-
-              {/* TOGGLE SWITCH */}
-              <button
-                onClick={() => toggleHadis(hadis.id)}
-                className={`
-                  w-14 h-7 rounded-full relative transition-all duration-300 shadow-inner
-                  ${hadis.enabled ? "bg-green-500" : "bg-gray-400"}
-                `}
-              >
-                <span
-                  className={`
-                    absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow 
-                    transform transition-all duration-300
-                    ${hadis.enabled ? "translate-x-7" : "translate-x-0"}
-                  `}
-                ></span>
-              </button>
+        
+        {hadisList.map((h) => (
+          <div
+            key={h.id}
+            className="bg-white p-5 rounded-2xl shadow border flex justify-between items-center"
+          >
+            <div className="flex-1 pr-6">
+              <p className="font-semibold text-black/85">{h.konten}</p>
+              <p className="text-sm text-black/50 italic">
+                {h.riwayat} - {h.kitab}
+              </p>
             </div>
-          ))}
-        </div>
+
+            <button
+              onClick={() => toggle(h.id)}
+              className={`w-14 h-7 rounded-full relative
+                ${!h.disabled ? "bg-green-500" : "bg-gray-400"}
+              `}
+            >
+              <span
+                className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full
+                  ${!h.disabled ? "translate-x-7" : "translate-x-0"}
+                `}
+              />
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

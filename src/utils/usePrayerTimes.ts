@@ -1,8 +1,16 @@
 import { useEffect, useState, useRef } from "react";
 import { playBeepSound } from "./sound";
 
+const PRE_ADZAN_SECONDS = 5; // bunyi beep sebelum adzan
+const ADZAN_DURATION = 150; // durasi adzan (detik)
+const IQOMAH_DURATION = 420; // lama iqomah (detik)
+const KOMAT_DURATION = 40; // lama komat (detik)
+const BLANK_DURATION = 60; // lama layar kosong (detik)
+
 export function usePrayerTimes() {
-  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null);
+  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(
+    null
+  );
   const [prayerTimes, setPrayerTimes] = useState<any[]>([]);
 
   const [currentPrayer, setCurrentPrayer] = useState<string | null>(null);
@@ -102,23 +110,29 @@ export function usePrayerTimes() {
         const s = Math.floor((diffNext % 60000) / 1000);
 
         setCountdown(
-          `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
+          `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(
+            s
+          ).padStart(2, "0")}`
         );
 
-        if (diffNext <= 5000 && diffNext > 0) {
+        // --- PRE ADZAN (beep sebelum adzan)
+        if (diffNext <= PRE_ADZAN_SECONDS * 1000 && diffNext > 0) {
           setPreAdzan(true);
           if (!played.current) {
             playBeepSound();
             played.current = true;
           }
-        } else setPreAdzan(false);
+        } else {
+          setPreAdzan(false);
+        }
       }
 
       if (!curr) return;
 
       const diffCurr = now.getTime() - toDate(curr.time).getTime();
 
-      if (!isAdzan && diffCurr >= 0 && diffCurr < 10000) {
+      // --- ADZAN DIMULAI
+      if (!isAdzan && diffCurr >= 0 && diffCurr < ADZAN_DURATION * 1000) {
         setIsAdzan(true);
         setIsIqomah(false);
         setIsKomat(false);
@@ -127,36 +141,40 @@ export function usePrayerTimes() {
         setIqomahStarted(false);
       }
 
-      if (isAdzan && !iqomahStarted && diffCurr >= 10000) {
+      // --- IQOMAH DIMULAI
+      if (isAdzan && !iqomahStarted && diffCurr >= ADZAN_DURATION * 1000) {
         setIsIqomah(true);
-        setIqomahTimer(420);
+        setIqomahTimer(IQOMAH_DURATION);
         setIqomahStarted(true);
       }
 
+      // --- IQOMAH COUNTDOWN
       if (isIqomah) {
         setIqomahTimer((prev) => {
           if (prev <= 1) {
             setIsIqomah(false);
             setIsKomat(true);
-            setKomatTimer(40);
+            setKomatTimer(KOMAT_DURATION);
             return 0;
           }
           return prev - 1;
         });
       }
 
+      // --- KOMAT COUNTDOWN
       if (isKomat) {
         setKomatTimer((prev) => {
           if (prev <= 1) {
             setIsKomat(false);
             setBlankPage(true);
-            setBlankTimer(60);
+            setBlankTimer(BLANK_DURATION);
             return 0;
           }
           return prev - 1;
         });
       }
 
+      // --- BLANK PAGE COUNTDOWN
       if (blankPage) {
         setBlankTimer((prev) => {
           if (prev <= 1) {

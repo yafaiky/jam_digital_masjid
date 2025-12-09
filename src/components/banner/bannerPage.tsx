@@ -16,7 +16,14 @@ export default function BannerPage({ index }: { index: number }) {
       }
     };
 
-    if (token) loadBanners();
+    if (token) 
+    loadBanners();
+
+    useEffect(() => {
+      const interval = setInterval(loadBanners, 5000);
+      return () => clearInterval(interval);
+    }, []);
+    
   }, [token]);
 
   const current = banners[index];
