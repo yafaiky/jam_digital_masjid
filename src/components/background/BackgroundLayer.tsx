@@ -1,32 +1,28 @@
 import { useEffect, useState } from "react";
 import { getClient } from "../../services/masterClient";
+import type { Client } from "../../services/masterClient";
 
 export default function BackgroundLayer() {
-  const [background, setBackground] = useState<string | null>(null);
-
+  const [client, setClient] = useState<Client | null>(null);
   const token = localStorage.getItem("token") || "";
 
   useEffect(() => {
-    async function loadBackground() {
+    async function loadClient() {
       try {
         const data = await getClient(token);
-        setBackground(data.config_background ?? null);
+        setClient(data);
       } catch (err) {
         console.error("Gagal ambil background:", err);
       }
     }
 
-    loadBackground(); 
+    if (token) loadClient();
 
-    // Optional: refresh tiap 5 detik supaya live update
-    const interval = setInterval(loadBackground, 5000);
+    const interval = setInterval(loadClient, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [token]);
 
-  const backgroundUrl = background
-  ? `${import.meta.env.VITE_API_URL}/storage/${background}`
-  : "background.jpg";
-
+  const backgroundUrl = client?.background_url ?? "/background.jpg";
 
   return (
     <div className="fixed inset-0 -z-10">
@@ -36,7 +32,6 @@ export default function BackgroundLayer() {
         alt="background"
       />
 
-      {/* overlay gelap */}
       <div className="absolute inset-0 bg-black/40" />
     </div>
   );

@@ -23,7 +23,7 @@ export default function Login() {
     const password = e.target.password.value;
     const device = e.target.device.value; // "hp" atau "tv"
 
-    const res = await axios.post("http://localhost:8080/login", {
+    const res = await axios.post("http://10.2.22.23:8080/login", {
       username,
       password,
       device,

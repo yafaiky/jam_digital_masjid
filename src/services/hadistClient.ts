@@ -9,7 +9,7 @@ export type Hadist = {
 };
 
 export async function getHadists(token: string): Promise<Hadist[]> {
-  const res = await fetch(`${API_URL}/tenant/client/hadists`, {
+  const res = await fetch(`${API_URL}/tenant/hadists`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -24,7 +24,7 @@ export async function toggleHadist(
   disabled: boolean,
   token: string
 ) {
-  const res = await fetch(`${API_URL}/tenant/client/hadists/${id}`, {
+  const res = await fetch(`${API_URL}/tenant/hadists/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

@@ -18,16 +18,13 @@ export default function BannerSetting() {
 
   const [banners, setBanners] = useState<BannerItem[]>([]);
 
-  // ========================
-  // LOAD BANNER DARI BACKEND
-  // ========================
   const loadBanners = async () => {
     try {
       const data = await getBanners(token);
 
-      const mapped: BannerItem[] = data.map((b: Banner) => ({
-        id: b.ID, 
-        image: b.Path, 
+      const mapped = data.map((b: Banner) => ({
+        id: b.id,
+        image: b.url,
         preview: null,
       }));
 

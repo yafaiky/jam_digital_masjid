@@ -4,35 +4,60 @@ import { getClient, updateClient } from "../../services/masterClient";
 export default function HeaderSetting() {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
-  const [logo, setLogo] = useState<File | null>(null);
+
+  // file baru
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+
+  // url dari backend
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+
   const [loading, setLoading] = useState(false);
 
-  const token = localStorage.getItem("token") || "";  
+  const token = localStorage.getItem("token") || "";
+  const API_URL = import.meta.env.VITE_API_URL;
 
-  // Ambil data saat halaman dibuka
+  // AMBIL DATA SAAT LOAD
   useEffect(() => {
     async function fetchData() {
       try {
         const data = await getClient(token);
+
         setName(data.name ?? "");
         setLocation(data.location ?? "");
+
+        // tampilkan logo lama dari backend
+        if (data.logo_url) {
+          setLogoPreview(data.logo_url);
+        } else if (data.logo) {
+          setLogoPreview(`${API_URL}/storage/${data.logo}`);
+        }
       } catch (err) {
         console.error(err);
       }
     }
 
-    fetchData();
+    if (token) fetchData();
   }, [token]);
 
-  // Submit ke backend
+  // PREVIEW SAAT PILIH FILE BARU
+  const handleLogoChange = (file: File | undefined) => {
+    if (!file) return;
+
+    const previewURL = URL.createObjectURL(file);
+    setLogoFile(file);
+    setLogoPreview(previewURL);
+  };
+
+  // SUBMIT KE BACKEND
   const handleSubmit = async () => {
     try {
       setLoading(true);
+
       await updateClient(
         {
           name,
           location,
-          logo,
+          logo: logoFile,
         },
         token
       );
@@ -89,12 +114,12 @@ export default function HeaderSetting() {
           <label className="cursor-pointer block">
             <div className="p-6 border-2 max-w-sm border-dashed border-yellow-500 rounded-2xl flex flex-col items-center justify-center bg-white hover:bg-yellow-50">
               <p className="font-semibold text-black">Klik untuk edit logo</p>
-              {logo && (
+
+              {logoPreview && (
                 <img
-                  src={URL.createObjectURL(logo)}
+                  src={logoPreview}
                   alt="Preview Logo"
                   className="mt-3 w-32 h-32 object-contain rounded"
-                  // onChange={(e) => setLogo(e.target.value)}
                 />
               )}
             </div>
@@ -103,11 +128,9 @@ export default function HeaderSetting() {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  setLogo(e.target.files[0]);
-                }
-              }}
+              onChange={(e) =>
+                handleLogoChange(e.target.files?.[0])
+              }
             />
           </label>
         </div>

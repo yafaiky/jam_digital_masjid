@@ -16,28 +16,22 @@ export default function BannerPage({ index }: { index: number }) {
       }
     };
 
-    if (token) 
-    loadBanners();
+    if (token) loadBanners();
 
-    useEffect(() => {
-      const interval = setInterval(loadBanners, 5000);
-      return () => clearInterval(interval);
-    }, []);
-    
+    const interval = setInterval(loadBanners, 5000);
+    return () => clearInterval(interval);
   }, [token]);
 
   const current = banners[index];
 
-  const realPath = current?.Path?.startsWith("http")
-    ? current.Path
-    : current
-    ? `${import.meta.env.VITE_API_URL}/storage/images/${current.Path}`
-    : null;
-
   return (
     <div className="w-full h-full bg-black">
-      {current && realPath ? (
-        <img src={realPath} className="w-full h-full object-cover" />
+      {current?.url ? (
+        <img
+          src={current.url}
+          className="w-full h-full object-cover"
+          alt={`Banner ${index + 1}`}
+        />
       ) : (
         <div className="w-full h-full flex items-center justify-center text-white/40">
           Tidak ada banner

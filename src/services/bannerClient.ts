@@ -1,10 +1,11 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 export type Banner = {
-  ID: number;
-  ClientID: string;
-  Path: string;
-  CreatedAt: string;
+  id: number;
+  client_id: string;
+  path: string;
+  created_at: string;
+  url: string;
 };
 
 export async function getBanners(token: string): Promise<Banner[]> {

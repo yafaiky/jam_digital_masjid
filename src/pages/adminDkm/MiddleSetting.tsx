@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import { getClient, updateClient } from "../../services/masterClient";
 
 export default function MiddleSetting() {
-  const [backgroundPreview, setBackgroundPreview] = useState<string | null>(null);
+  const [backgroundPreview, setBackgroundPreview] = useState<string | null>(
+    null
+  );
   const [backgroundFile, setBackgroundFile] = useState<File | null>(null);
   const [runningText, setRunningText] = useState("");
 
   const token = localStorage.getItem("token") || "";
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleUploadBackground = (file: File | undefined) => {
     if (!file) return;
@@ -38,11 +41,16 @@ export default function MiddleSetting() {
       try {
         const data = await getClient(token);
 
-        // Kalau API langsung kirim field
+        // running text
         setRunningText(data.running_text || "");
 
-        if (data.config_background) {
-          setBackgroundPreview(data.config_background);
+        // tampilkan background lama
+        if (data.background_url) {
+          setBackgroundPreview(data.background_url);
+        } else if (data.config_background) {
+          setBackgroundPreview(
+            `${API_URL}/storage/${data.config_background}`
+          );
         }
       } catch (err) {
         console.error("Gagal load data:", err);
@@ -59,6 +67,7 @@ export default function MiddleSetting() {
       <div className="bg-yellow-100 p-8 rounded-3xl border-t-20 border-yellow-400 shadow-lg">
         <h2 className="text-xl font-bold mb-6">Pengaturan Background</h2>
 
+        {/* Preview Background */}
         <div className="mb-5">
           <div className="w-full max-w-md aspect-video rounded-2xl overflow-hidden shadow border bg-gray-200">
             {backgroundPreview ? (
@@ -75,6 +84,7 @@ export default function MiddleSetting() {
           </div>
         </div>
 
+        {/* Upload Background */}
         <label className="block mb-10">
           <div
             className="p-6 border-2 max-w-md border-dashed border-yellow-500 rounded-2xl
@@ -85,7 +95,9 @@ export default function MiddleSetting() {
               Klik untuk unggah background
             </p>
             <p className="text-xs text-black/60 mt-1">Max size: 2 MB</p>
-            <p className="text-xs text-black/40">Format: JPG • PNG • WebP</p>
+            <p className="text-xs text-black/40">
+              Format: JPG • PNG • WebP
+            </p>
           </div>
 
           <input
@@ -98,6 +110,7 @@ export default function MiddleSetting() {
 
         <hr className="my-8 border-yellow-400/40" />
 
+        {/* Running Text */}
         <h2 className="text-xl font-bold mb-6">Pengaturan Running Text</h2>
 
         <label className="block text-sm font-semibold mb-2">
@@ -113,6 +126,7 @@ export default function MiddleSetting() {
           onChange={(e) => setRunningText(e.target.value)}
         />
 
+        {/* Save Button */}
         <button
           onClick={handleSave}
           className="mt-6 px-6 py-3 bg-yellow-400 hover:bg-yellow-300 
