@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 // import App from "./App";
 import Protected from "./routes/RedirectRoot";
 import Login from "./pages/login/Login";
+import AdminLogin from "./pages/login/loginAdmin";
 
 // display
 import DisplayMasjid from "./pages/DisplayMasjidDkm/DashboardJam"
@@ -17,6 +18,10 @@ import MiddleSetting from "./pages/adminDkm/MiddleSetting";
 import HadistSetting from "./pages/adminDkm/HadistSetting";
 import BannerSetting from "./pages/adminDkm/BannerSetting";
 
+// import admin japin
+import CreateAkunMasjid from "./pages/adminJapin/createAkunMasjid";
+import ViewAkunMasjid from "./pages/adminJapin/viewAkunMasjid";
+
 import { AuthProvider } from "./context/AuthContext";
 import { RequireRole } from "./routes/ProtectedRoute";
 
@@ -28,6 +33,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <Routes>
         {/* LOGIN */}
         <Route path="/login" element={<Login />} />
+        <Route path="/login/admin" element={<AdminLogin />} />
 
         {/* JAM MASJID (public) */}
         <Route path="/" element={<Protected />} />
@@ -54,10 +60,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           path="/admin"
           element={
             <RequireRole expected="admin">
-              <AdminJapin /> 
+              <AdminJapin />
             </RequireRole>
           }
-        />
+        >
+          <Route index element={<Navigate to="/admin/create" replace />} />  
+          {/* <Route path="dkm" element={<AdminLayout />} /> */}
+          <Route path="create" element={<CreateAkunMasjid />} />
+          <Route path="view" element={<ViewAkunMasjid />} />
+        </Route>
 
         {/* DISPLAY */}
         <Route

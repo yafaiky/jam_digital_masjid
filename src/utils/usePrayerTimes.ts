@@ -4,8 +4,8 @@ import { playBeepSound } from "./sound";
 const PRE_ADZAN_SECONDS = 5; // bunyi beep sebelum adzan
 const ADZAN_DURATION = 150; // durasi adzan (detik)
 const IQOMAH_DURATION = 420; // lama iqomah (detik)
-const KOMAT_DURATION = 40; // lama komat (detik)
-const BLANK_DURATION = 60; // lama layar kosong (detik)
+const KOMAT_DURATION = 15; // lama komat (detik)
+const BLANK_DURATION = 600; // lama layar kosong (detik)
 
 export function usePrayerTimes() {
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(
