@@ -48,7 +48,6 @@ const SetupWizard: React.FC = () => {
         <Step3UploadBanners
           clientId={clientId}
           onFinish={() => {
-            // redirect / reset / success page
             alert("Semua setup berhasil 🎉");
             setStep(1);
             setClientId(null);

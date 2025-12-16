@@ -45,6 +45,8 @@ const Step3UploadBanners: React.FC<Step3UploadBannersProps> = ({
 
     try {
       const formData = new FormData();
+      const token = localStorage.getItem("token") || "";
+      
       files.forEach((file) => {
         formData.append("banners", file);
       });
@@ -52,7 +54,7 @@ const Step3UploadBanners: React.FC<Step3UploadBannersProps> = ({
 
       const res = await fetch("http://localhost:8080/admin/banners", {
         method: "POST",
-        // headers: { Authorization: `Bearer ${token}` } // jika pakai JWT
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 

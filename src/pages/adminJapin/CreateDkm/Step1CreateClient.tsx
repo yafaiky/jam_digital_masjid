@@ -101,17 +101,6 @@ const Step1CreateClient: React.FC<Step1CreateClientProps> = ({ onSuccess }) => {
         />
       </div>
 
-      {/* <div>
-        <label>Timezone</label>
-        <input
-          type="text"
-          name="timezone"
-          value={form.timezone}
-          onChange={handleChange}
-          placeholder="Asia/Jakarta"
-        />
-      </div> */}
-
       <div>
         <label>Judul Tampilan</label>
         <input

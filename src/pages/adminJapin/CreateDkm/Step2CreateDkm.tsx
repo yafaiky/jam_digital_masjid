@@ -6,8 +6,8 @@ type Step2CreateDkmProps = {
 };
 
 type DkmForm = {
-  username: string;
-  password: string;
+  Username: string;
+  Password: string;
 };
 
 const Step2CreateDkm: React.FC<Step2CreateDkmProps> = ({
@@ -15,8 +15,8 @@ const Step2CreateDkm: React.FC<Step2CreateDkmProps> = ({
   onSuccess,
 }) => {
   const [form, setForm] = useState<DkmForm>({
-    username: "",
-    password: "",
+    Username: "",
+    Password: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -35,13 +35,13 @@ const Step2CreateDkm: React.FC<Step2CreateDkmProps> = ({
     setError(null);
 
     try {
-      if (!form.username || !form.password) {
+      if (!form.Username || !form.Password) {
         throw new Error("Username dan password wajib diisi");
       }
 
         const token = localStorage.getItem("token") || "";
 
-      if (form.password.length < 6) {
+      if (form.Password.length < 6) {
         throw new Error("Password minimal 6 karakter");
       }
 
@@ -53,8 +53,8 @@ const Step2CreateDkm: React.FC<Step2CreateDkmProps> = ({
         },
         body: JSON.stringify({
           client_id: clientId,
-          username: form.username,
-          password: form.password,
+          username: form.Username,
+          password: form.Password,
         }),
       });
 
@@ -84,7 +84,7 @@ const Step2CreateDkm: React.FC<Step2CreateDkmProps> = ({
         <input
           type="text"
           name="username"
-          value={form.username}
+          value={form.Username}
           onChange={handleChange}
           placeholder="Majid Nurul Mustofa"
         />
@@ -95,7 +95,7 @@ const Step2CreateDkm: React.FC<Step2CreateDkmProps> = ({
         <input
           type="password"
           name="password"
-          value={form.password}
+          value={form.Password}
           onChange={handleChange}
           placeholder="Minimal 6 karakter"
         />
