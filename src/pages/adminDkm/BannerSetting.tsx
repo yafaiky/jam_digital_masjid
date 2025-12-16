@@ -38,9 +38,7 @@ export default function BannerSetting() {
     if (token) loadBanners();
   }, [token]);
 
-  // ====================
   // HANDLE FILE UPLOAD
-  // ====================
   const handleBannerUpload = (id: number, file: File) => {
     if (!file) return;
 
@@ -60,9 +58,7 @@ export default function BannerSetting() {
     );
   };
 
-  // ====================
   // SAVE KE SERVER (PUT)
-  // ====================
   const handleSave = async () => {
     try {
       for (const banner of banners) {

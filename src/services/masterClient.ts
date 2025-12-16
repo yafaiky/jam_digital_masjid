@@ -1,8 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-// ====================
 // TYPE
-// ====================
 export type Client = {
   id: string;
   name: string | null;
@@ -28,9 +26,7 @@ export type Client = {
   // sound_url?: string;
 };
 
-// ====================
 // API FUNCTIONS
-// ====================
 export async function getClient(token: string): Promise<Client> {
   const res = await fetch(`${API_URL}/tenant/client`, {
     method: "GET",

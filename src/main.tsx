@@ -19,7 +19,7 @@ import HadistSetting from "./pages/adminDkm/HadistSetting";
 import BannerSetting from "./pages/adminDkm/BannerSetting";
 
 // import admin japin
-import CreateAkunMasjid from "./pages/adminJapin/createAkunMasjid";
+import CreateAkunMasjid from "./pages/adminJapin/CreateDkm/SetupWizard";
 import ViewAkunMasjid from "./pages/adminJapin/viewAkunMasjid";
 
 import { AuthProvider } from "./context/AuthContext";
@@ -64,8 +64,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             </RequireRole>
           }
         >
-          <Route index element={<Navigate to="/admin/create" replace />} />  
-          {/* <Route path="dkm" element={<AdminLayout />} /> */}
+          <Route index element={<Navigate to="/admin/create" replace />} /> 
           <Route path="create" element={<CreateAkunMasjid />} />
           <Route path="view" element={<ViewAkunMasjid />} />
         </Route>
