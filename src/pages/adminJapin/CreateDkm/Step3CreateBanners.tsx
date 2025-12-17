@@ -44,17 +44,22 @@ const Step3UploadBanners: React.FC<Step3UploadBannersProps> = ({
     setLoading(true);
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Session habis, silakan login ulang");
+
       const formData = new FormData();
-      const token = localStorage.getItem("token") || "";
-      
+
       files.forEach((file) => {
-        formData.append("banners", file);
+        formData.append("banner", file); // ✅ FIELD FILE
       });
-      formData.append("client_id", clientId);
+
+      formData.append("client_id", clientId); // ✅ FIELD ID
 
       const res = await fetch("http://localhost:8080/admin/banners", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
 
@@ -88,7 +93,9 @@ const Step3UploadBanners: React.FC<Step3UploadBannersProps> = ({
         disabled={files.length >= MAX_BANNER}
       />
 
-      <div style={{ display: "flex", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
+      <div
+        style={{ display: "flex", gap: 10, marginTop: 16, flexWrap: "wrap" }}
+      >
         {files.map((file, index) => (
           <div
             key={index}

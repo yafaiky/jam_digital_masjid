@@ -14,7 +14,7 @@ export function useBannerMode(pageMode: string) {
   const shouldEnterBanner =
     pageMode === "default" &&
     defaultStartTime !== null &&
-    (Date.now() - defaultStartTime) / 1000 >= 300;
+    (Date.now() - defaultStartTime) / 1000 >= 100;
 
   useEffect(() => {
     if (pageMode === "banner") {

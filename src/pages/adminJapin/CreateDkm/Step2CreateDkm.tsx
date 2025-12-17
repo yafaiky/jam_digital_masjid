@@ -52,7 +52,7 @@ const Step2CreateDkm: React.FC<Step2CreateDkmProps> = ({
           Authorization: `Bearer ${token}` 
         },
         body: JSON.stringify({
-          client_id: clientId,
+          ClientId: clientId,
           username: form.Username,
           password: form.Password,
         }),
@@ -83,7 +83,7 @@ const Step2CreateDkm: React.FC<Step2CreateDkmProps> = ({
         <label>Username</label>
         <input
           type="text"
-          name="username"
+          name="Username"
           value={form.Username}
           onChange={handleChange}
           placeholder="Majid Nurul Mustofa"
@@ -94,7 +94,7 @@ const Step2CreateDkm: React.FC<Step2CreateDkmProps> = ({
         <label>Password</label>
         <input
           type="password"
-          name="password"
+          name="Password"
           value={form.Password}
           onChange={handleChange}
           placeholder="Minimal 6 karakter"
