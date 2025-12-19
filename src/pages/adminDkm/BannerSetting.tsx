@@ -23,7 +23,7 @@ export default function BannerSetting() {
       const data = await getBanners(token);
 
       const mapped = data.map((b: Banner) => ({
-        id: b.id,
+        id: b.ID,
         image: b.url,
         preview: null,
       }));

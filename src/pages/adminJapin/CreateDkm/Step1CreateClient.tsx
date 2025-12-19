@@ -101,7 +101,7 @@ const Step1CreateClient: React.FC<Step1CreateClientProps> = ({ onSuccess }) => {
         />
       </div>
 
-      <div>
+      {/* <div>
         <label>Judul Tampilan</label>
         <input
           type="text"
@@ -110,7 +110,7 @@ const Step1CreateClient: React.FC<Step1CreateClientProps> = ({ onSuccess }) => {
           onChange={handleChange}
           placeholder="Masjid At Thohir"
         />
-      </div>
+      </div> */}
 
       <div>
         <label>Running Text</label>

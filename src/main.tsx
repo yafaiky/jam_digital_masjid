@@ -17,6 +17,7 @@ import HeaderSetting from "./pages/adminDkm/HeaderSetting";
 import MiddleSetting from "./pages/adminDkm/MiddleSetting";
 import HadistSetting from "./pages/adminDkm/HadistSetting";
 import BannerSetting from "./pages/adminDkm/BannerSetting";
+import LaporanKeuanganMajid from "./pages/adminDkm/LaporanKeuanganMajid";
 
 // import admin japin
 import CreateAkunMasjid from "./pages/adminJapin/CreateDkm/SetupWizard";
@@ -53,6 +54,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="middle" element={<MiddleSetting />} />
           <Route path="hadist" element={<HadistSetting />} />
           <Route path="banner" element={<BannerSetting />} />
+          <Route path="laporan-keuangan" element={<LaporanKeuanganMajid />} />
         </Route>
 
         {/* ADMIN SUPER */}

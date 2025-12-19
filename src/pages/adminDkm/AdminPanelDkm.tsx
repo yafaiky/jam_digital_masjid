@@ -61,6 +61,10 @@ export default function AdminLayout() {
           <AdminMenuItem to="/dkm/banner" icon={<FaImage />}>
             Banner
           </AdminMenuItem>
+          
+          <AdminMenuItem to="/dkm/laporan-keuangan" icon={<FaBook />}>
+            Laporan Keuangan
+          </AdminMenuItem>
         </nav>
 
         {/* LOGOUT BUTTON */}

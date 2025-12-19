@@ -1,7 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 export type Banner = {
-  id: number;
+  ID: number;
   client_id: string;
   path: string;
   created_at: string;
