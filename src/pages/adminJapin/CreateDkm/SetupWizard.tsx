@@ -23,7 +23,7 @@ const SetupWizard: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: 24, maxWidth: 800, margin: "0 auto" }}>
+    <div>
       <strong>Setup Masjid</strong>
       <div>Step {step} dari 3</div>
 

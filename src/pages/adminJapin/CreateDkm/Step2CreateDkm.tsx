@@ -1,77 +1,18 @@
-import React, { useState } from "react";
+// components/Step2CreateDkm.tsx
+import React from "react";
+import { useCreateDkm } from "../../../hooks/useCreateDKM";
 
 type Step2CreateDkmProps = {
   clientId: string;
   onSuccess: () => void;
 };
 
-type DkmForm = {
-  Username: string;
-  Password: string;
-};
-
 const Step2CreateDkm: React.FC<Step2CreateDkmProps> = ({
   clientId,
   onSuccess,
 }) => {
-  const [form, setForm] = useState<DkmForm>({
-    Username: "",
-    Password: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const submit = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      if (!form.Username || !form.Password) {
-        throw new Error("Username dan password wajib diisi");
-      }
-
-        const token = localStorage.getItem("token") || "";
-
-      if (form.Password.length < 6) {
-        throw new Error("Password minimal 6 karakter");
-      }
-
-      const res = await fetch("http://localhost:8080/admin/dkm", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}` 
-        },
-        body: JSON.stringify({
-          ClientId: clientId,
-          username: form.Username,
-          password: form.Password,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Gagal membuat akun DKM");
-      }
-
-      // 👉 lanjut ke step 3
-      onSuccess();
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { form, loading, error, handleChange, submit } =
+    useCreateDkm(clientId, onSuccess);
 
   return (
     <div style={{ maxWidth: 400 }}>
