@@ -10,7 +10,7 @@ type AuthContextType = {
   login: (token: string, role: string) => void;
   logout: () => void;
   loading: boolean;
-};
+};  
 
 const AuthContext = createContext<AuthContextType>(null!);
 
