@@ -9,7 +9,7 @@ export default function BackgroundLayer() {
   useEffect(() => {
     async function loadClient() {
       try {
-        const data = await getClient(token);
+        const data = await getClient();
         setClient(data);
       } catch (err) {
         console.error("Gagal ambil background:", err);

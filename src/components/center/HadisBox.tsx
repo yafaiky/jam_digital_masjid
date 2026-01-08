@@ -11,9 +11,7 @@ export default function HadisBox() {
   useEffect(() => {
     const load = async () => {
       try {
-        const token = localStorage.getItem("token") || "";
-
-        const data = await getHadists(token);
+        const data = await getHadists();
 
         const aktif = data.filter((h) => !h.disabled);
         setHadisList(aktif);

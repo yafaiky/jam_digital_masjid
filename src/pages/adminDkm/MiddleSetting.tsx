@@ -21,13 +21,10 @@ export default function MiddleSetting() {
 
   const handleSave = async () => {
     try {
-      await updateClient(
-        {
-          running_text: runningText,
-          config_background: backgroundFile,
-        },
-        token
-      );
+      await updateClient({
+        running_text: runningText,
+        config_background: backgroundFile,
+      });
 
       alert("Berhasil disimpan");
     } catch (err) {
@@ -39,7 +36,7 @@ export default function MiddleSetting() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const data = await getClient(token);
+        const data = await getClient();
 
         // running text
         setRunningText(data.running_text || "");

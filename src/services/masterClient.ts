@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import api from "../api/axios";
 
 // TYPE
 export type Client = {
@@ -27,16 +27,9 @@ export type Client = {
 };
 
 // API FUNCTIONS
-export async function getClient(token: string): Promise<Client> {
-  const res = await fetch(`${API_URL}/tenant/client`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!res.ok) throw new Error("Gagal mengambil data client");
-  return res.json();
+export async function getClient(): Promise<Client> {
+  const res = await api.get("/tenant/client");
+  return res.data;
 }
 
 export type UpdateClientPayload = {
@@ -49,8 +42,7 @@ export type UpdateClientPayload = {
 };
 
 export async function updateClient(
-  data: UpdateClientPayload,
-  token: string
+  data: UpdateClientPayload
 ) {
   const formData = new FormData();
 
@@ -63,14 +55,6 @@ export async function updateClient(
   if (data.config_sound_alert)
     formData.append("config_sound_alert", data.config_sound_alert);
 
-  const res = await fetch(`${API_URL}/tenant/client`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  });
-
-  if (!res.ok) throw new Error("Gagal update data client");
-  return res.json();
+  const res = await api.put("/tenant/client", formData);
+  return res.data;
 }

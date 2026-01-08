@@ -1,5 +1,6 @@
 // hooks/useCreateClient.ts
 import { useState } from "react";
+import api from "../api/axios";
 
 export type MasterClientForm = {
   name: string;
@@ -38,29 +39,10 @@ export function useCreateClient(onSuccess: (id: string) => void) {
         throw new Error("Nama masjid dan lokasi wajib diisi");
       }
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Session habis, silakan login ulang");
-      }
-
-      const res = await fetch("http://localhost:8080/admin/client", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Gagal membuat master client");
-      }
-
-      onSuccess(data.id);
+      const res = await api.post("/admin/client", form);
+      onSuccess(res.data.id);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message || "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }

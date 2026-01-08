@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import axios from "axios";
+import api from "../../api/axios";
 import { FiUser, FiLock, FiTv, FiSmartphone } from "react-icons/fi";
 import { FaMosque } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -28,7 +28,7 @@ export default function Login() {
     const device = e.target.device.value;
 
     try {
-      const res = await axios.post("http://localhost:8080/login", {
+      const res = await api.post("/login", {
         username,
         password,
         device,

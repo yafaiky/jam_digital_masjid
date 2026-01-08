@@ -1,5 +1,6 @@
 // hooks/useCreateDkm.ts
 import { useState } from "react";
+import api from "../api/axios";
 
 type DkmForm = {
   Username: string;
@@ -37,33 +38,15 @@ export function useCreateDkm(
         throw new Error("Password minimal 6 karakter");
       }
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Session habis, silakan login ulang");
-      }
-
-      const res = await fetch("http://localhost:8080/admin/dkm", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ClientId: clientId,
-          username: form.Username,
-          password: form.Password,
-        }),
+      await api.post("/admin/dkm", {
+        ClientId: clientId,
+        username: form.Username,
+        password: form.Password,
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Gagal membuat akun DKM");
-      }
 
       onSuccess();
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message || "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }

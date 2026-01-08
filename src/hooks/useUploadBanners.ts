@@ -1,5 +1,6 @@
 // hooks/useUploadBanners.ts
 import { useState } from "react";
+import api from "../api/axios";
 
 const MAX_BANNER = 5;
 
@@ -40,11 +41,6 @@ export function useUploadBanners(
     try {
       setLoading(true);
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Session habis, silakan login ulang");
-      }
-
       const formData = new FormData();
 
       files.forEach((file) => {
@@ -53,24 +49,12 @@ export function useUploadBanners(
 
       formData.append("client_id", clientId);
 
-      const res = await fetch("http://localhost:8080/admin/banners", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Gagal upload banner");
-      }
+      await api.post("/admin/banners", formData);
 
       alert("Setup selesai 🎉");
       onFinish?.();
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.error || err.message || "Terjadi kesalahan");
     } finally {
       setLoading(false);
     }

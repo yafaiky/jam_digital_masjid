@@ -4,12 +4,11 @@ import { getClient } from "../../services/masterClient";
 export default function RunningTxt() {
   const [text, setText] = useState("Memuat running text...");
 
-  const token = localStorage.getItem("token") || "";
 
   useEffect(() => {
     async function loadText() {
       try {
-        const data = await getClient(token);
+        const data = await getClient();
         setText(data.running_text || "Selamat datang di masjid");
       } catch (err) {
         console.error("Gagal ambil running text", err);

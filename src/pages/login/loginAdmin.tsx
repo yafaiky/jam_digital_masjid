@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import axios from "axios";
+import api from "../../api/axios";
 import { FiUser, FiLock, FiMonitor } from "react-icons/fi";
 import { useState } from "react";
 
@@ -21,7 +21,7 @@ export default function LoginAdmin() {
     const password = e.target.password.value;
 
     try {
-      const res = await axios.post("http://localhost:8080/login/admin", {
+      const res = await api.post("/login/admin", {
         username,
         password,
       });

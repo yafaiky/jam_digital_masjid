@@ -9,7 +9,7 @@ export default function BannerPage({ index }: { index: number }) {
   useEffect(() => {
     const loadBanners = async () => {
       try {
-        const data = await getBanners(token);
+        const data = await getBanners();
         setBanners(data);
       } catch (err) {
         console.error("Gagal load banner:", err);

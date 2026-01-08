@@ -6,12 +6,11 @@ export default function HeaderMasjid() {
   const [alamat, setAlamat] = useState("");
   const [logo, setLogo] = useState<string | null>(null);
 
-  const token = localStorage.getItem("token") || "";
 
   useEffect(() => {
     async function loadData() {
       try {
-        const data = await getClient(token);
+        const data = await getClient();
 
         setNama(data.name ?? "");
         setAlamat(data.location ?? "");

@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import api from "../api/axios";
 
 export type Hadist = {
   id: number;
@@ -8,31 +8,15 @@ export type Hadist = {
   disabled: boolean;
 };
 
-export async function getHadists(token: string): Promise<Hadist[]> {
-  const res = await fetch(`${API_URL}/tenant/hadists`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!res.ok) throw new Error("Gagal ambil hadist");
-  return res.json();
+export async function getHadists(): Promise<Hadist[]> {
+  const res = await api.get("/tenant/hadists");
+  return res.data;
 }
 
 export async function toggleHadist(
   id: number,
-  disabled: boolean,
-  token: string
+  disabled: boolean
 ) {
-  const res = await fetch(`${API_URL}/tenant/hadists/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ disabled }),
-  });
-
-  if (!res.ok) throw new Error("Gagal update hadist");
-  return res.json();
+  const res = await api.put(`/tenant/hadists/${id}`, { disabled });
+  return res.data;
 }

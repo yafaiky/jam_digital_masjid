@@ -20,10 +20,10 @@ export default function BannerSetting() {
 
   const loadBanners = async () => {
     try {
-      const data = await getBanners(token);
+      const data = await getBanners();
 
       const mapped = data.map((b: Banner) => ({
-        id: b.ID,
+        id: b.id,
         image: b.url,
         preview: null,
       }));
@@ -63,7 +63,7 @@ export default function BannerSetting() {
     try {
       for (const banner of banners) {
         if (banner.file) {
-          await updateBanner(banner.id, banner.file, token);
+          await updateBanner(banner.id, banner.file);
         }
       }
 
