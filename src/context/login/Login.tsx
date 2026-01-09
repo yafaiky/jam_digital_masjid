@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../AuthContext";
 import api from "../../api/axios";
 import { FiUser, FiLock, FiTv, FiSmartphone } from "react-icons/fi";
 import { FaMosque } from "react-icons/fa";

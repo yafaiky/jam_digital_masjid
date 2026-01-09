@@ -4,8 +4,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // import App from "./App";
 import Protected from "./routes/RedirectRoot";
-import Login from "./pages/login/Login";
-import AdminLogin from "./pages/login/loginAdmin";
+import Login from "./context/login/Login";
+import AdminLogin from "./context/login/loginAdmin";
 
 // display
 import DisplayMasjid from "./pages/DisplayMasjidDkm/DashboardJam"

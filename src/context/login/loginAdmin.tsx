@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../AuthContext";
 import api from "../../api/axios";
 import { FiUser, FiLock, FiMonitor } from "react-icons/fi";
 import { useState } from "react";
