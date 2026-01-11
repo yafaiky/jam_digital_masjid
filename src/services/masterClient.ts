@@ -9,7 +9,7 @@ export type Client = {
 
   config_title: string | null;
   config_background: string | null;
-  // config_sound_alert: string | null;
+  config_sound_alert: string | null;
   logo: string | null;
 
   running_text: string | null;
@@ -23,7 +23,7 @@ export type Client = {
   // ✅ dari backend
   logo_url?: string;
   background_url?: string;
-  // sound_url?: string;
+  sound_url?: string;
 };
 
 // API FUNCTIONS

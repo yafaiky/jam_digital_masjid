@@ -10,7 +10,7 @@ export default function HadisSetting() {
     if (!token) return;
 
     const load = async () => {
-      const data = await getHadists(token);
+      const data = await getHadists();
       setHadisList(data);
     };
 
@@ -27,7 +27,7 @@ export default function HadisSetting() {
     const target = updated.find((h) => h.id === id);
     if (!target) return;
 
-    await toggleHadist(id, target.disabled, token);
+    await toggleHadist(id, target.disabled);
   };
 
   return (

@@ -28,7 +28,7 @@ export default function HeaderMasjid() {
 
   const logoUrl = logo
   ? `${import.meta.env.VITE_API_URL}/storage/${logo}`
-  : "/logo.png";
+  : "/logo_masjid.png";
 
   return (
     <div className="flex gap-3 items-center">

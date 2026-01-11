@@ -9,9 +9,31 @@ import BannerPage from "../../components/banner/bannerPage";
 
 import { usePrayerTimes } from "../../utils/usePrayerTimes";
 import { useBannerMode } from "../../utils/useBannerMode";
-import { playBeepSound } from "../../utils/sound";
+import { getClient } from "../../services/masterClient";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function DashboardJam() {
+  const [soundUrl, setSoundUrl] = useState<string>("");
+
+  // Load sound config from server
+  useEffect(() => {
+    const loadSoundConfig = async () => {
+      try {
+        const client = await getClient();
+        if (client.sound_url) {
+          setSoundUrl(client.sound_url);
+        } else if (client.config_sound_alert) {
+          setSoundUrl(`${API_URL}/storage/${client.config_sound_alert}`);
+        }
+      } catch (err) {
+        console.error("Failed to load sound config:", err);
+      }
+    };
+
+    loadSoundConfig();
+  }, []);
+
   const {
     preAdzan,
     isAdzan,
@@ -20,7 +42,7 @@ export default function DashboardJam() {
     isKomat,
     blankPage,
     nextPrayer,
-  } = usePrayerTimes();
+  } = usePrayerTimes({ soundUrl });
 
   const [pageMode, setPageMode] = useState<
     "default" | "azan" | "iqomah" | "komat" | "blank" | "banner"
@@ -52,13 +74,14 @@ export default function DashboardJam() {
     "| MODE:",
     pageMode,
     "| BANNER INDEX:",
-    bannerIndex
+    bannerIndex,
+    "| SOUND URL:",
+    soundUrl
   );
 
-  // PRE ADZAN - bunyikan beep 1x
+  // PRE ADZAN - sound diputar dari usePrayerTimesWithSound
   useEffect(() => {
     if (preAdzan && nextPrayer && nextPrayer !== lastPlayedPrayer) {
-      playBeepSound();
       setLastPlayedPrayer(nextPrayer);
     }
   }, [preAdzan, nextPrayer, lastPlayedPrayer]);

@@ -1,13 +1,18 @@
 import { useEffect, useState, useRef } from "react";
-import { playBeepSound } from "./sound";
+import { playBeepSound, playCustomSound } from "./sound";
 
-const PRE_ADZAN_SECONDS = 5; // bunyi beep sebelum adzan
-const ADZAN_DURATION = 150; // durasi adzan (detik)
-const IQOMAH_DURATION = 420; // lama iqomah (detik)
-const KOMAT_DURATION = 15; // lama komat (detik)
-const BLANK_DURATION = 600; // lama layar kosong (detik)
+const PRE_ADZAN_SECONDS = 5;
+const ADZAN_DURATION = 150;
+const IQOMAH_DURATION = 420;
+const KOMAT_DURATION = 15;
+const BLANK_DURATION = 600;
 
-export function usePrayerTimes() {
+// Optional parameter untuk custom sound
+interface UsePrayerTimesOptions {
+  soundUrl?: string;
+}
+
+export function usePrayerTimes(options?: UsePrayerTimesOptions) {
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(
     null
   );
@@ -30,6 +35,7 @@ export function usePrayerTimes() {
   const [blankTimer, setBlankTimer] = useState(0);
 
   const played = useRef(false);
+  const playedKomat = useRef(false);
   const [iqomahStarted, setIqomahStarted] = useState(false);
 
   // Ambil lokasi user
@@ -97,6 +103,11 @@ export function usePrayerTimes() {
         }
       }
 
+      // Jika tidak ada current prayer, ambil prayer pertama hari besok sebagai next
+      if (!next && prayerTimes.length > 0) {
+        next = prayerTimes[0];
+      }
+
       setCurrentPrayer(curr?.name || null);
       setNextPrayer(next?.name || null);
 
@@ -115,15 +126,23 @@ export function usePrayerTimes() {
           ).padStart(2, "0")}`
         );
 
-        // --- PRE ADZAN (beep sebelum adzan)
+        // --- PRE ADZAN (5 detik sebelum shalat tiba)
         if (diffNext <= PRE_ADZAN_SECONDS * 1000 && diffNext > 0) {
           setPreAdzan(true);
           if (!played.current) {
-            playBeepSound();
+            if (options?.soundUrl) {
+              playCustomSound(options.soundUrl);
+            } else {
+              playBeepSound();
+            }
             played.current = true;
           }
         } else {
-          setPreAdzan(false);
+          // Reset preAdzan dan played flag ketika sudah > 5 detik
+          if (diffNext > PRE_ADZAN_SECONDS * 1000) {
+            setPreAdzan(false);
+            played.current = false;
+          }
         }
       }
 
@@ -148,6 +167,11 @@ export function usePrayerTimes() {
         setIqomahStarted(true);
       }
 
+      // --- KOMAT DIMULAI
+      if (isIqomah && komatTimer === 0) {
+        playedKomat.current = false; // Reset komat sound flag
+      }
+
       // --- IQOMAH COUNTDOWN
       if (isIqomah) {
         setIqomahTimer((prev) => {
@@ -164,6 +188,16 @@ export function usePrayerTimes() {
       // --- KOMAT COUNTDOWN
       if (isKomat) {
         setKomatTimer((prev) => {
+          // Play sound 5 detik sebelum komat selesai
+          if (prev === 5 && !playedKomat.current) {
+            if (options?.soundUrl) {
+              playCustomSound(options.soundUrl);
+            } else {
+              playBeepSound();
+            }
+            playedKomat.current = true;
+          }
+
           if (prev <= 1) {
             setIsKomat(false);
             setBlankPage(true);
@@ -192,7 +226,7 @@ export function usePrayerTimes() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [prayerTimes, isAdzan, isIqomah, isKomat, blankPage, iqomahStarted]);
+  }, [prayerTimes, isAdzan, isIqomah, isKomat, blankPage, iqomahStarted, options?.soundUrl]);
 
   return {
     prayerTimes,
