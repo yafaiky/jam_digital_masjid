@@ -4,7 +4,8 @@ import { useCreateClient } from "../../../hooks/useCreateClient";
 import {
   FaMosque,
   FaMapMarkerAlt,
-  FaAlignLeft,
+  // FaAlignLeft,
+  FaExclamationTriangle,
   FaCheckCircle,
   FaArrowRight,
 } from "react-icons/fa";
@@ -43,7 +44,7 @@ const Step1CreateClient: React.FC<Step1CreateClientProps> = ({ onSuccess }) => {
             {error && (
               <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700 flex items-start gap-3 shadow-sm">
                 <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 flex items-center justify-center mt-0.5">
-                  <span className="text-xs">⚠️</span>
+                  <FaExclamationTriangle className="text-xs" />
                 </div>
                 <span className="flex-1">{error}</span>
               </div>
@@ -66,7 +67,7 @@ const Step1CreateClient: React.FC<Step1CreateClientProps> = ({ onSuccess }) => {
                     name="name"
                     value={form.name}
                     onChange={handleChange}
-                    placeholder="Masjid At-Tohir"
+                    placeholder="Masukan Nama Masjid"
                     className="w-full rounded-xl border-2 border-gray-200 bg-white py-3.5 pl-12 pr-4 text-sm font-medium text-gray-800 placeholder:text-gray-400
                                focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-100
                                hover:border-gray-300 transition-all duration-300"
@@ -89,7 +90,7 @@ const Step1CreateClient: React.FC<Step1CreateClientProps> = ({ onSuccess }) => {
                     name="location"
                     value={form.location}
                     onChange={handleChange}
-                    placeholder="Jakarta Selatan"
+                    placeholder="Lokasi Masjid"
                     className="w-full rounded-xl border-2 border-gray-200 bg-white py-3.5 pl-12 pr-4 text-sm font-medium text-gray-800 placeholder:text-gray-400
                                focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-100
                                hover:border-gray-300 transition-all duration-300"
@@ -98,7 +99,7 @@ const Step1CreateClient: React.FC<Step1CreateClientProps> = ({ onSuccess }) => {
               </div>
 
               {/* Running Text */}
-              <div className="group">
+              {/* <div className="group">
                 <label className="mb-2 block text-sm font-semibold text-gray-700 flex items-center gap-2">
                   <FaAlignLeft className="w-4 h-4 text-blue-500" />
                   Running Text
@@ -118,7 +119,7 @@ const Step1CreateClient: React.FC<Step1CreateClientProps> = ({ onSuccess }) => {
                                hover:border-gray-300 transition-all duration-300 resize-none"
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Action Button */}

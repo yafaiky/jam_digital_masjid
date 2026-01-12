@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Step1CreateClient from "./Step1CreateClient";
 import Step2CreateDkm from "./Step2CreateDkm";
 import Step3UploadBanners from "./Step3CreateBanners";
@@ -17,10 +17,22 @@ const SetupWizard: React.FC = () => {
     }
   }, []);
 
-  const goToStep = (nextStep: SetupStep) => {
-    if (nextStep > 1 && !clientId) return;
-    setStep(nextStep);
-  };
+  const handleStep1Success = useCallback((id: string) => {
+    setClientId(id);
+    sessionStorage.setItem("setup_client_id", id);
+    setStep(2);
+  }, []);
+
+  const handleStep2Success = useCallback(() => {
+    setStep(3);
+  }, []);
+
+  const handleStep3Finish = useCallback(() => {
+    alert("Semua setup berhasil 🎉");
+    sessionStorage.removeItem("setup_client_id");
+    setClientId(null);
+    setStep(1);
+  }, []);
 
   return (
     <div>
@@ -33,30 +45,21 @@ const SetupWizard: React.FC = () => {
 
       {step === 1 && (
         <Step1CreateClient
-          onSuccess={(id) => {
-            setClientId(id);
-            sessionStorage.setItem("setup_client_id", id);
-            goToStep(2);
-          }}
+          onSuccess={handleStep1Success}
         />
       )}
 
       {step === 2 && clientId && (
         <Step2CreateDkm
           clientId={clientId}
-          onSuccess={() => goToStep(3)}
+          onSuccess={handleStep2Success}
         />
       )}
 
       {step === 3 && clientId && (
         <Step3UploadBanners
           clientId={clientId}
-          onFinish={() => {
-            alert("Semua setup berhasil 🎉");
-            sessionStorage.removeItem("setup_client_id");
-            setClientId(null);
-            setStep(1);
-          }}
+          onFinish={handleStep3Finish}
         />
       )}
     </div>

@@ -1,5 +1,5 @@
 // hooks/useCreateClient.ts
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import api from "../api/axios";
 
 export type MasterClientForm = {
@@ -22,16 +22,25 @@ export function useCreateClient(onSuccess: (id: string) => void) {
   const [form, setForm] = useState<MasterClientForm>(initialForm);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isSubmittingRef = useRef(false);
+  const hasSucceededRef = useRef(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setForm((prev) => ({ ...prev, [name]: value }));
+    },
+    []
+  );
 
-  const submit = async () => {
+  const submit = useCallback(async () => {
+    // Prevent multiple submissions
+    if (isSubmittingRef.current || loading || hasSucceededRef.current) {
+      return;
+    }
+
     try {
+      isSubmittingRef.current = true;
       setLoading(true);
       setError(null);
 
@@ -40,13 +49,18 @@ export function useCreateClient(onSuccess: (id: string) => void) {
       }
 
       const res = await api.post("/admin/client", form);
+      
+      // Mark as succeeded before calling onSuccess
+      hasSucceededRef.current = true;
+      
+      // Call onSuccess immediately with the ID
       onSuccess(res.data.id);
     } catch (err: any) {
-      setError(err.response?.data?.error || err.message || "Terjadi kesalahan");
-    } finally {
+      isSubmittingRef.current = false;
       setLoading(false);
+      setError(err.response?.data?.error || err.message || "Terjadi kesalahan");
     }
-  };
+  }, [form, loading, onSuccess]);
 
   return {
     form,

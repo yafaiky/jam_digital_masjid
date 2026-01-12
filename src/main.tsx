@@ -11,8 +11,8 @@ import AdminLogin from "./context/login/loginAdmin";
 import DisplayMasjid from "./pages/DisplayMasjidDkm/DashboardJam"
 
 // import DisplayAdmin from "./App";
-import AdminJapin from "./pages/adminJapin/adminJapin";
-import AdminLayout from "./pages/adminDkm/AdminPanelDkm"; 
+import AdminJapin from "./components/Navbar/NavbarAdminJapin/NavbarAdminJapin";
+import AdminLayout from "./components/Navbar/NavbarAdminDkm/NavbarAdminDkm"; 
 import HeaderSetting from "./pages/adminDkm/HeaderSetting";
 import MiddleSetting from "./pages/adminDkm/MiddleSetting";
 import HadistSetting from "./pages/adminDkm/HadistSetting";

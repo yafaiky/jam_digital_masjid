@@ -1,5 +1,5 @@
 // hooks/useUploadBanners.ts
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import api from "../api/axios";
 
 const MAX_BANNER = 5;
@@ -11,26 +11,34 @@ export function useUploadBanners(
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isSubmittingRef = useRef(false);
+  const hasSucceededRef = useRef(false);
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
 
     const selectedFiles = Array.from(e.target.files || []);
 
-    if (files.length + selectedFiles.length > MAX_BANNER) {
-      setError(`Maksimal ${MAX_BANNER} banner`);
+    setFiles((prev) => {
+      if (prev.length + selectedFiles.length > MAX_BANNER) {
+        setError(`Maksimal ${MAX_BANNER} banner`);
+        return prev;
+      }
+      return [...prev, ...selectedFiles];
+    });
+    e.target.value = "";
+  }, []);
+
+  const removeFile = useCallback((index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  }, []);
+
+  const submit = useCallback(async () => {
+    // Prevent multiple submissions
+    if (isSubmittingRef.current || loading || hasSucceededRef.current) {
       return;
     }
 
-    setFiles((prev) => [...prev, ...selectedFiles]);
-    e.target.value = "";
-  };
-
-  const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const submit = async () => {
     setError(null);
 
     if (files.length !== MAX_BANNER) {
@@ -39,6 +47,7 @@ export function useUploadBanners(
     }
 
     try {
+      isSubmittingRef.current = true;
       setLoading(true);
 
       const formData = new FormData();
@@ -51,14 +60,17 @@ export function useUploadBanners(
 
       await api.post("/admin/banners", formData);
 
+      // Mark as succeeded before calling onFinish
+      hasSucceededRef.current = true;
+
       alert("Setup selesai 🎉");
       onFinish?.();
     } catch (err: any) {
-      setError(err.response?.data?.error || err.message || "Terjadi kesalahan");
-    } finally {
+      isSubmittingRef.current = false;
       setLoading(false);
+      setError(err.response?.data?.error || err.message || "Terjadi kesalahan");
     }
-  };
+  }, [files, loading, clientId, onFinish]);
 
   return {
     files,

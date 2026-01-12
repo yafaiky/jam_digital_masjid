@@ -1,41 +1,26 @@
-import { useEffect, useState } from "react";
-import api from "../../api/axios";
+import { useMasjidList } from "../../hooks/useMasjidList";
 import {
   FaMosque,
   FaMapMarkerAlt,
   FaCalendarAlt,
   FaUser,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
 
-export type AkunMasjid = {
-  id: string;
-  name: string;
-  location: string;
-  created_at: string;
-  DkmUser?: {
-    id: string;
-    username: string;
-  };
-};
-
 export default function ViewAkunMasjid() {
-  const [data, setData] = useState<AkunMasjid[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchData = async () => {
-    try {
-      const res = await api.get("/admin/client");
-      setData(res.data);
-    } catch (err) {
-      console.error("Gagal mengambil data", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const {
+    data,
+    loading,
+    currentPage,
+    totalItems,
+    totalPages,
+    startIndex,
+    endIndex,
+    goToPreviousPage,
+    goToNextPage,
+    setCurrentPage,
+  } = useMasjidList();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -51,7 +36,7 @@ export default function ViewAkunMasjid() {
                 Daftar Akun Masjid
               </h1>
               <p className="text-sm text-gray-600">
-                Total {data.length} masjid terdaftar
+                Total {totalItems} masjid terdaftar
               </p>
             </div>
           </div>
@@ -80,82 +65,130 @@ export default function ViewAkunMasjid() {
             </div>
           </div>
         ) : (
-          
-          <div className="grid gap-6 sm:grid-cols-3 lg:grid-cols-3">
-            {data.map((item) => (
-              <div
-                key={item.id}
-                className="group rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-lg hover:border-blue-200 transition-all duration-300 h-full"
-              >
-                <div className="border-b border-gray-100 bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-cyan-400">
-                      <FaMosque className="w-5 h-5 text-white" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-                      {item.name}
-                    </h3>
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-4">
-                  {/* Lokasi */}
-                  <div className="flex items-start gap-3">
-                    <FaMapMarkerAlt className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
-                        Lokasi
-                      </p>
-                      <p className="text-sm text-gray-800 font-medium mt-0.5">
-                        {item.location}
-                      </p>
+          <>
+            <div className="grid gap-6 sm:grid-cols-3 lg:grid-cols-3">
+              {data.map((item) => (
+                <div
+                  key={item.id}
+                  className="group rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-lg hover:border-blue-200 transition-all duration-300 h-full"
+                >
+                  <div className="border-b border-gray-100 bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-cyan-400">
+                        <FaMosque className="w-5 h-5 text-white" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+                        {item.name}
+                      </h3>
                     </div>
                   </div>
 
-                  {/* DKM User */}
-                  {item.DkmUser && (
+                  <div className="p-6 space-y-4">
+                    {/* Lokasi */}
                     <div className="flex items-start gap-3">
-                      <FaUser className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                      <FaMapMarkerAlt className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
-                          Pengurus
+                          Lokasi
                         </p>
                         <p className="text-sm text-gray-800 font-medium mt-0.5">
-                          {item.DkmUser.username}
+                          {item.location}
                         </p>
                       </div>
                     </div>
-                  )}
 
-                  {/* Tanggal */}
-                  <div className="flex items-start gap-3">
-                    <FaCalendarAlt className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
-                        Dibuat pada
-                      </p>
-                      <p className="text-sm text-gray-800 font-medium mt-0.5">
-                        {new Date(item.created_at).toLocaleDateString(
-                          "id-ID",
-                          {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          }
-                        )}
-                      </p>
+                    {/* DKM User */}
+                    {/* {item.DkmUser && (
+                      <div className="flex items-start gap-3">
+                        <FaUser className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                            Pengurus
+                          </p>
+                          <p className="text-sm text-gray-800 font-medium mt-0.5">
+                            {item.DkmUser.username}
+                          </p>
+                        </div>
+                      </div>
+                    )} */}
+
+                    {/* Tanggal */}
+                    <div className="flex items-start gap-3">
+                      <FaCalendarAlt className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                          Dibuat pada
+                        </p>
+                        <p className="text-sm text-gray-800 font-medium mt-0.5">
+                          {new Date(item.created_at).toLocaleDateString(
+                            "id-ID",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            }
+                          )}
+                        </p>
+                      </div>
                     </div>
                   </div>
+
+                  {/* <div className="border-t border-gray-100 bg-gray-50 px-6 py-3">
+                    <button className="w-full rounded-lg bg-gradient-to-r from-blue-600 to-cyan-400 py-2 text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.02] active:scale-95">
+                      Kelola
+                    </button>
+                  </div> */}
+                </div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8 flex items-center justify-between rounded-xl bg-white p-6 shadow-sm border border-gray-200">
+                <div className="text-sm text-gray-600 font-medium">
+                  Menampilkan {startIndex}-{endIndex} dari {totalItems}
                 </div>
 
-                {/* <div className="border-t border-gray-100 bg-gray-50 px-6 py-3">
-                  <button className="w-full rounded-lg bg-gradient-to-r from-blue-600 to-cyan-400 py-2 text-sm font-semibold text-white transition-all duration-300 hover:scale-[1.02] active:scale-95">
-                    Kelola
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={goToPreviousPage}
+                    disabled={currentPage === 1}
+                    className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                  >
+                    <FaChevronLeft className="w-4 h-4" />
+                    Sebelumnya
                   </button>
-                </div> */}
+
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`w-10 h-10 rounded-lg font-medium transition-all duration-300 ${
+                            page === currentPage
+                              ? "bg-gradient-to-r from-blue-600 to-cyan-400 text-white"
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      )
+                    )}
+                  </div>
+
+                  <button
+                    onClick={goToNextPage}  
+                    disabled={currentPage === totalPages}
+                    className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                  >
+                    Berikutnya
+                    <FaChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
     </div>
