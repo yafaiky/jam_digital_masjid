@@ -79,7 +79,7 @@ export default function BannerSetting() {
       setIsSaving(false);
     }
   };
-
+  
   return (
     <div>
       <div className="flex items-center gap-3 mb-8">
@@ -103,7 +103,7 @@ export default function BannerSetting() {
             <div key={b.id} className="bg-white p-5 rounded-xl shadow-md border-2 border-yellow-200 hover:border-yellow-400 transition">
               <div className="flex items-center gap-2 mb-3">
                 <FaImages className="text-yellow-600 text-lg" />
-                <h3 className="font-bold text-lg">Banner {b.id}</h3>
+                <h3 className="font-bold text-lg">Banner </h3>
               </div>
 
               {/* PREVIEW */}

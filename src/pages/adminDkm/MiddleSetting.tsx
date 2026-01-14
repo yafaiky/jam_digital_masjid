@@ -293,7 +293,7 @@ export default function MiddleSetting() {
         <button
           onClick={handleSubmitAll}
           disabled={isSaving}
-          className="w-full px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-400
+          className=" px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-400
                      text-black font-semibold rounded-2xl shadow transition flex items-center justify-center gap-2"
         >
           {isSaving ? (

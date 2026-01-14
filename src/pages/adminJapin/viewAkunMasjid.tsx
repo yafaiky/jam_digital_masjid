@@ -3,7 +3,9 @@ import {
   FaMosque,
   FaMapMarkerAlt,
   FaCalendarAlt,
-  FaUser,
+  // FaUser,
+  FaSearch,
+  FaTimes,
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
@@ -17,9 +19,11 @@ export default function ViewAkunMasjid() {
     totalPages,
     startIndex,
     endIndex,
+    searchQuery,
     goToPreviousPage,
     goToNextPage,
     setCurrentPage,
+    setSearch,
   } = useMasjidList();
 
   return (
@@ -43,6 +47,45 @@ export default function ViewAkunMasjid() {
         </div>
       </div>
 
+      {/* Search Bar */}
+      <div className="mt-8 ml-13 flex">
+        <div className="relative w-full max-w-lg">
+          {/* Search Icon */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+            <FaSearch className="h-5 w-5 text-gray-400" />
+          </div>
+
+          {/* Input */}
+          <input
+            type="text"
+            placeholder="Cari nama masjid atau lokasi..."
+            value={searchQuery}
+            onChange={(e) => setSearch(e.target.value)}
+            className="
+        w-full rounded-xl border border-gray-300
+        bg-white py-3 pl-11 pr-12 text-sm
+        shadow-sm transition-all duration-200
+        focus:border-blue-500 focus:ring-4 focus:ring-blue-100
+        hover:border-gray-400
+        outline-none
+      "
+          />
+
+          {/* Clear Button */}
+          {searchQuery && (
+            <button
+              onClick={() => setSearch("")}
+              className="
+          absolute inset-y-0 right-0 flex items-center pr-4
+          text-gray-400 hover:text-gray-600 transition
+        "
+            >
+              <FaTimes className="h-5 w-5" />
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Content */}
       <div className="mx-auto max-w-7xl px-6 py-12">
         {loading ? (
@@ -55,8 +98,8 @@ export default function ViewAkunMasjid() {
         ) : data.length === 0 ? (
           <div className="flex items-center justify-center py-16">
             <div className="text-center">
-              <FaMosque className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-              <p className="text-gray-600 font-medium text-lg">
+              <img src="/icon.png" alt="icon" className="mx-auto h-16 w-16 mb-4 grayscale" />
+              <p className="text-gray-500 font-medium text-lg">
                 Belum ada masjid terdaftar
               </p>
               <p className="text-gray-500 text-sm mt-1">
@@ -178,7 +221,7 @@ export default function ViewAkunMasjid() {
                   </div>
 
                   <button
-                    onClick={goToNextPage}  
+                    onClick={goToNextPage}
                     disabled={currentPage === totalPages}
                     className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                   >

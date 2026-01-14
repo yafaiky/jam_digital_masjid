@@ -6,63 +6,85 @@ export type AkunMasjid = {
   name: string;
   location: string;
   created_at: string;
+  DkmUser?: {
+    id: string;
+    username: string;
+  };
 };
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 9;
 
 export function useMasjidList() {
-  const [data, setData] = useState<AkunMasjid[]>([]);
+  const [allData, setAllData] = useState<AkunMasjid[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  const fetchData = useCallback(async (page: number = 1) => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await api.get("/admin/client", {
-        params: {
-          page,
-          limit: ITEMS_PER_PAGE,
-        },
-      });
+      const res = await api.get("/admin/client");
 
-      // Jika API mengembalikan object dengan data dan total
-      if (res.data.data && Array.isArray(res.data.data)) {
-        setData(res.data.data);
-        setTotalItems(res.data.total || res.data.data.length);
+      if (res.data?.data && Array.isArray(res.data.data)) {
+        setAllData(res.data.data);
       } else if (Array.isArray(res.data)) {
-        // Jika API mengembalikan array langsung
-        setData(res.data);
-        setTotalItems(res.data.length);
+        setAllData(res.data);
       }
     } catch (err) {
       console.error("Gagal mengambil data", err);
-      setData([]);
+      setAllData([]);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage, fetchData]);
+    fetchData();
+  }, [fetchData]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Filter data berdasarkan search query
+  const filteredData = allData.filter(
+    (item) =>
+      item.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      item.location.toLowerCase().includes(debouncedSearch.toLowerCase())
+  );
+
+  const totalItems = filteredData.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
+  // Reset ke halaman 1 saat search berubah
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  // Paginate filtered data
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const data = filteredData.slice(startIndex, endIndex);
+
   const goToPreviousPage = useCallback(() => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  }, [currentPage]);
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  }, []);
 
   const goToNextPage = useCallback(() => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  }, [currentPage, totalPages]);
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  }, [totalPages]);
 
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE + 1;
-  const endIndex = Math.min(currentPage * ITEMS_PER_PAGE, totalItems);
+  const setSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+
+  const displayStartIndex = totalItems === 0 ? 0 : startIndex + 1;
+  const displayEndIndex = Math.min(endIndex, totalItems);
 
   return {
     data,
@@ -70,10 +92,12 @@ export function useMasjidList() {
     currentPage,
     totalItems,
     totalPages,
-    startIndex,
-    endIndex,
+    startIndex: displayStartIndex,
+    endIndex: displayEndIndex,
+    searchQuery,
     goToPreviousPage,
     goToNextPage,
     setCurrentPage,
+    setSearch,
   };
 }

@@ -150,7 +150,7 @@ export default function HeaderSetting() {
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-400 text-black font-semibold rounded-2xl shadow transition flex items-center justify-center gap-2"
+          className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-400 text-black font-semibold rounded-2xl shadow transition flex items-center justify-center gap-2"
         >
           {loading ? (
             <>
