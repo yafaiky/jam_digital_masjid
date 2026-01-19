@@ -17,7 +17,7 @@ import HeaderSetting from "./pages/adminDkm/HeaderSetting";
 import MiddleSetting from "./pages/adminDkm/MiddleSetting";
 import HadistSetting from "./pages/adminDkm/HadistSetting";
 import BannerSetting from "./pages/adminDkm/BannerSetting";
-import LaporanKeuanganMajid from "./pages/adminDkm/LaporanKeuangan/LaporanKeuanganMajid";
+import LaporanKeuanganMajid from "./pages/adminDkm/LaporanKeuangan/viewFitur";
 
 // import admin japin
 import CreateAkunMasjid from "./pages/adminJapin/CreateDkm/SetupWizard";
