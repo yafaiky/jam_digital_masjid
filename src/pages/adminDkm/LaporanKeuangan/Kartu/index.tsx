@@ -29,7 +29,7 @@ const KartuIndex: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ml-4 mr-4 mb-4 mt-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-800">
           Manajemen Kartu Keuangan
@@ -37,7 +37,7 @@ const KartuIndex: React.FC = () => {
 
         <button
           onClick={() => setActiveTab('create')}
-          className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-400 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-cyan-500 transition-all duration-300"
+          className="flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition-all duration-300"
         >
           <FaPlus className="text-sm" />
           Tambah Kartu

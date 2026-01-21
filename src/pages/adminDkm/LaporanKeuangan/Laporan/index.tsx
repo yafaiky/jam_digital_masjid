@@ -23,7 +23,7 @@ const LaporanIndex: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ml-4 mr-4 mb-4 mt-4">
       <div className="flex items-center gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-pink-400 shadow-md">
           <FaChartBar className="w-6 h-6 text-white" />
