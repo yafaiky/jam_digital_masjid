@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { FaChartBar, FaCalendarAlt } from "react-icons/fa";
+import {
+  FaChartBar,
+  FaCalendarAlt,
+  FaArrowUp,
+  FaArrowDown,
+  FaMoneyBillAlt,
+} from "react-icons/fa";
 import { useFinanceBalance } from "../../../../hooks/useFinanceBalance";
 
 const LaporanIndex: React.FC = () => {
@@ -15,17 +21,19 @@ const LaporanIndex: React.FC = () => {
   }, [selectedMonth, getRealtimeBalance]);
 
   const formatCurrency = (amount: number) => {
+    const saveAmmount = Number(amount) || 0;
+
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
       minimumFractionDigits: 0,
-    }).format(amount);
+    }).format(saveAmmount);
   };
 
   return (
     <div className="space-y-6 ml-4 mr-4 mb-4 mt-4">
       <div className="flex items-center gap-4">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-pink-400 shadow-md">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-400 to-orange-400 shadow-md">
           <FaChartBar className="w-6 h-6 text-white" />
         </div>
         <div>
@@ -49,7 +57,7 @@ const LaporanIndex: React.FC = () => {
             id="month-select"
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none"
           />
         </div>
       </div>
@@ -82,7 +90,7 @@ const LaporanIndex: React.FC = () => {
                 </p>
               </div>
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-green-100 to-emerald-100">
-                <span className="text-2xl">📈</span>
+                <FaArrowUp className="text-2xl text-green-600" />
               </div>
             </div>
           </div>
@@ -99,7 +107,7 @@ const LaporanIndex: React.FC = () => {
                 </p>
               </div>
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-red-100 to-pink-100">
-                <span className="text-2xl">📉</span>
+                <FaArrowDown className="text-2xl text-red-600" />
               </div>
             </div>
           </div>
@@ -116,7 +124,7 @@ const LaporanIndex: React.FC = () => {
                 </p>
               </div>
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-cyan-100">
-                <span className="text-2xl">💰</span>
+                <FaMoneyBillAlt className="text-2xl text-blue-600" />
               </div>
             </div>
           </div>

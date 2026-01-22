@@ -76,9 +76,10 @@ export default function DashboardJam() {
     "| BANNER INDEX:",
     bannerIndex,
     "| SOUND URL:",
-    soundUrl
+    soundUrl,
   );
 
+  // pengaturan saat mau masuk waktu solat
   // PRE ADZAN - sound diputar dari usePrayerTimesWithSound
   useEffect(() => {
     if (preAdzan && nextPrayer && nextPrayer !== lastPlayedPrayer) {
@@ -86,58 +87,54 @@ export default function DashboardJam() {
     }
   }, [preAdzan, nextPrayer, lastPlayedPrayer]);
 
-  // MASUK ADZAN
   useEffect(() => {
-    if (isAdzan) setPageMode("azan");
-  }, [isAdzan]);
+    // PRIORITY ORDER (TOP → DOWN)
 
-  // MASUK IQOMAH
-  useEffect(() => {
-    if (isIqomah) setPageMode("iqomah");
-  }, [isIqomah]);
-
-  // MASUK KOMAT
-  useEffect(() => {
-    if (isKomat) setPageMode("komat");
-  }, [isKomat]);
-
-  // MASUK BLANK PAGE
-  useEffect(() => {
-    if (blankPage) setPageMode("blank");
-  }, [blankPage]);
-
-  // IQOMAH selesai → biarkan usePrayerTimes mengatur lanjutannya
-  useEffect(() => {
-    if (!isIqomah && pageMode === "iqomah") {
-      /* no-op */
+    if (isAdzan) {
+      setPageMode("azan");
+      return;
     }
-  }, [isIqomah, pageMode]);
 
-  // KOMAT selesai → biarkan lanjut ke blank page
-  useEffect(() => {
-    if (!isKomat && pageMode === "komat") {
-      /* no-op */
+    if (isIqomah) {
+      setPageMode("iqomah");
+      return;
     }
-  }, [isKomat, pageMode]);
 
-  // BLANK → selesai → kembali DEFAULT (TANPA startDefaultTimer)
-  useEffect(() => {
+    if (isKomat) {
+      setPageMode("komat");
+      return;
+    }
+
+    if (blankPage) {
+      setPageMode("blank");
+      return;
+    }
+
+    // Banner hanya boleh muncul di DEFAULT
+    if (pageMode === "default" && shouldEnterBanner) {
+      setPageMode("banner");
+      return;
+    }
+
+    if (pageMode === "banner" && shouldExitBanner) {
+      setPageMode("default");
+      return;
+    }
+
+    // Blank selesai → kembali default
     if (!blankPage && pageMode === "blank") {
       setPageMode("default");
+      return;
     }
-  }, [blankPage, pageMode]);
-
-  // DEFAULT → masuk Banner
-  useEffect(() => {
-    if (shouldEnterBanner) setPageMode("banner");
-  }, [shouldEnterBanner]);
-
-  // BANNER selesai → kembali DEFAULT (TANPA startDefaultTimer)
-  useEffect(() => {
-    if (shouldExitBanner && pageMode === "banner") {
-      setPageMode("default");
-    }
-  }, [shouldExitBanner, pageMode]);
+  }, [
+    isAdzan,
+    isIqomah,
+    isKomat,
+    blankPage,
+    shouldEnterBanner,
+    shouldExitBanner,
+    pageMode,
+  ]);
 
   // RESET timer banner SETIAP masuk DEFAULT
   useEffect(() => {

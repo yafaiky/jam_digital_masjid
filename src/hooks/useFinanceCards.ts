@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { financeCardsApi } from '../services/financeClient';
 import type { FinanceCard } from '../services/financeClient';
 
@@ -7,7 +7,7 @@ export const useFinanceCards = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchCards = async () => {
+  const fetchCards = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -18,7 +18,7 @@ export const useFinanceCards = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const createCard = async (data: { card_name: string }) => {
     setLoading(true);
@@ -35,12 +35,17 @@ export const useFinanceCards = () => {
     }
   };
 
-  const updateCard = async (id: number, data: { card_name?: string; status?: string }) => {
+  const updateCard = async (
+    id: number,
+    data: { card_name?: string; status?: string }
+  ) => {
     setLoading(true);
     setError(null);
     try {
       const response = await financeCardsApi.update(id, data);
-      setCards(prev => prev.map(card => card.id === id ? response.data : card));
+      setCards(prev =>
+        prev.map(card => (card.id === id ? response.data : card))
+      );
       return response.data;
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to update card');
@@ -66,7 +71,7 @@ export const useFinanceCards = () => {
 
   useEffect(() => {
     fetchCards();
-  }, []);
+  }, [fetchCards]);
 
   return {
     cards,

@@ -160,7 +160,7 @@ const TransaksiIndex: React.FC = () => {
         </h2>
         <button
           onClick={() => setShowCreateForm(true)}
-          className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-400 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-cyan-500 transition-all duration-300"
+          className="flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition-all duration-300"
         >
           <FaPlus className="text-sm" />
           Tambah Transaksi
@@ -297,7 +297,7 @@ const TransaksiIndex: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-400 text-white rounded-lg font-medium hover:from-blue-700 hover:to-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                  className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-white rounded-lg hover:from-yellow-500 hover:to-orange-500  disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                 >
                   {loading ? "Membuat..." : "Buat Transaksi"}
                 </button>

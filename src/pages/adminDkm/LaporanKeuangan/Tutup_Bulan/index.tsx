@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import {
-  FaCalendarTimes,
   FaCheckCircle,
   FaExclamationTriangle,
 } from "react-icons/fa";
@@ -74,12 +73,7 @@ const TutupBulanIndex: React.FC = () => {
         <h2 className="text-2xl font-bold text-gray-800">
           Tutup Bulan Keuangan
         </h2>
-        {/* <div className="flex items-center gap-2 text-orange-600">
-          <FaCalendarTimes className="text-lg" />
-          <span className="text-sm font-medium">
-            Fitur untuk menutup periode bulan
-          </span>
-        </div> */}
+
       </div>
 
       {/* Month Selection */}

@@ -1,4 +1,3 @@
-
 import HeaderTop from "../../components/header/HeaderTop";
 import ClockBox from "../../components/center/ClockBox";
 import CountdownBox from "../../components/center/CountdownBox";
@@ -8,22 +7,13 @@ import RunningTxt from "../../components/footer/RunningText";
 import HariBesar from "../../components/header/HariBesar";
 import BackgroundLayer from "../../components/background/BackgroundLayer";
 
-// Gesture & Drawer
-// import MouseGesture from "../../components/slidingPanel/MouseGesture";
-// import RightDrawer from "../../components/slidingPanel/RightDrawer";
-
 export default function DashboardDefault() {
-  // const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (  
     <div className="w-full min-h-screen flex flex-col relative">
 
       {/* Background */}
       <BackgroundLayer />
-
-      {/* <MouseGesture onSwipeRight={() => setDrawerOpen(true)} />
-
-      <RightDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} /> */}
 
       {/* Header */}
       <HeaderTop />

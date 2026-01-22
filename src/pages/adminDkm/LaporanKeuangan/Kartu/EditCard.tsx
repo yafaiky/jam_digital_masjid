@@ -74,7 +74,7 @@ const EditCard: React.FC<EditCardProps> = ({ card, onSuccess }) => {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-gradient-to-r from-blue-600 to-cyan-400 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+        className="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white py-3 px-4 rounded-lg font-medium hover:from-yellow-500 hover:to-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
       >
         {loading ? 'Memperbarui...' : 'Perbarui Kartu'}
       </button>
