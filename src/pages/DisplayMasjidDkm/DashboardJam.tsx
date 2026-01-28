@@ -6,9 +6,11 @@ import IqomahPage from "../../components/azan/IqomahPage";
 import KomatPage from "../../components/azan/KomatPage";
 import BlankPage from "../../components/azan/BlankPage";
 import BannerPage from "../../components/banner/bannerPage";
+import LaporanDisplay from "../../components/LaporanDisplay/Display";
 
 import { usePrayerTimes } from "../../utils/usePrayerTimes";
 import { useBannerMode } from "../../utils/useBannerMode";
+import { useLaporanMode } from "../../utils/useLaporanMode";
 import { getClient } from "../../services/masterClient";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -34,6 +36,7 @@ export default function DashboardJam() {
     loadSoundConfig();
   }, []);
 
+  // Prayer Times Hook
   const {
     preAdzan,
     isAdzan,
@@ -45,18 +48,26 @@ export default function DashboardJam() {
   } = usePrayerTimes({ soundUrl });
 
   const [pageMode, setPageMode] = useState<
-    "default" | "azan" | "iqomah" | "komat" | "blank" | "banner"
+    "default" | "azan" | "iqomah" | "komat" | "blank" | "banner" | "laporan"
   >("default");
 
   const [lastPlayedPrayer, setLastPlayedPrayer] = useState<string | null>(null);
 
-  // === Banner Hook ===
+  // Banner Hook
   const {
     bannerIndex,
     startDefaultTimer,
     shouldEnterBanner,
     shouldExitBanner,
   } = useBannerMode(pageMode);
+
+  // Laporan Hook
+  const {
+    startLaporanTimer,
+    shouldEnterLaporan,
+    shouldExitLaporan,
+  } = useLaporanMode(pageMode);
+
 
   console.log(
     "PRE:",
@@ -117,6 +128,17 @@ export default function DashboardJam() {
     }
 
     if (pageMode === "banner" && shouldExitBanner) {
+      setPageMode("laporan");
+      return;
+    }
+
+    if (pageMode === "default" && shouldEnterLaporan) {
+      setPageMode("laporan");
+      return;
+    }
+
+    // Laporan setelah banners
+    if (pageMode === "laporan" && shouldExitLaporan) {
       setPageMode("default");
       return;
     }
@@ -133,6 +155,8 @@ export default function DashboardJam() {
     blankPage,
     shouldEnterBanner,
     shouldExitBanner,
+    shouldEnterLaporan,
+    shouldExitLaporan,
     pageMode,
   ]);
 
@@ -140,6 +164,13 @@ export default function DashboardJam() {
   useEffect(() => {
     if (pageMode === "default") {
       startDefaultTimer();
+    }
+  }, [pageMode]);
+
+  // START laporan timer SETIAP masuk LAPORAN
+  useEffect(() => {
+    if (pageMode === "laporan") {
+      startLaporanTimer();
     }
   }, [pageMode]);
 
@@ -151,6 +182,7 @@ export default function DashboardJam() {
       {pageMode === "komat" && <KomatPage />}
       {pageMode === "blank" && <BlankPage />}
       {pageMode === "banner" && <BannerPage index={bannerIndex} />}
+      {pageMode === "laporan" && <LaporanDisplay />}
     </div>
   );
 }

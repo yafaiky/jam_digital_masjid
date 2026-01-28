@@ -10,7 +10,7 @@ export function useBannerMode(pageMode: string) {
     setBannerIndex(0);
   };
 
-  // ===== 1 — Timer 5 menit untuk masuk banner =====
+  // 1 — Timer 5 menit untuk masuk banner
   const shouldEnterBanner =
     pageMode === "default" &&
     defaultStartTime !== null &&
@@ -22,7 +22,7 @@ export function useBannerMode(pageMode: string) {
     }
   }, [pageMode]);
 
-  // ===== 2 — Ganti banner tiap 30 detik (LOOP) =====
+  // 2 — Ganti banner tiap 30 detik (LOOP)
   useEffect(() => {
     if (pageMode !== "banner") return;
 
@@ -33,7 +33,7 @@ export function useBannerMode(pageMode: string) {
     return () => clearInterval(interval);
   }, [pageMode]);
 
-  // ===== 3 — Banner berjalan 2.5 menit (150 detik) =====
+  // 3 — Banner berjalan 2.5 menit (150 detik) 
   const shouldExitBanner =
     pageMode === "banner" &&
     bannerStartTime !== null &&

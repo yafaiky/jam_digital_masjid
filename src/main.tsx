@@ -23,9 +23,11 @@ import LaporanKeuanganMajid from "./pages/adminDkm/LaporanKeuangan/viewFitur";
 import CreateAkunMasjid from "./pages/adminJapin/CreateDkm/SetupWizard";
 import ViewAkunMasjid from "./pages/adminJapin/viewAkunMasjid";
 
+// auth context
 import { AuthProvider } from "./context/AuthContext";
 import { RequireRole } from "./routes/ProtectedRoute";
 
+// styles
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

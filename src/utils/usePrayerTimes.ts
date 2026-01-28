@@ -162,6 +162,7 @@ export function usePrayerTimes(options?: UsePrayerTimesOptions) {
 
       // --- IQOMAH DIMULAI
       if (isAdzan && !iqomahStarted && diffCurr >= ADZAN_DURATION * 1000) {
+        setIsAdzan(false);
         setIsIqomah(true);
         setIqomahTimer(IQOMAH_DURATION);
         setIqomahStarted(true);
@@ -176,6 +177,7 @@ export function usePrayerTimes(options?: UsePrayerTimesOptions) {
       if (isIqomah) {
         setIqomahTimer((prev) => {
           if (prev <= 1) {
+            setIsAdzan(false);
             setIsIqomah(false);
             setIsKomat(true);
             setKomatTimer(KOMAT_DURATION);
@@ -199,6 +201,8 @@ export function usePrayerTimes(options?: UsePrayerTimesOptions) {
           }
 
           if (prev <= 1) {
+            setIsAdzan(false);
+            setIsIqomah(false);
             setIsKomat(false);
             setBlankPage(true);
             setBlankTimer(BLANK_DURATION);
