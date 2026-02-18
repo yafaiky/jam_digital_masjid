@@ -8,9 +8,11 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
+  const { isFeatureEnabled } = useAuth();
   const [mounted, setMounted] = useState(false);
 
   const handleLogout = () => {
@@ -62,9 +64,11 @@ export default function AdminLayout() {
             Banner
           </AdminMenuItem>
           
-          <AdminMenuItem to="/dkm/laporan-keuangan" icon={<FaBook />}>
-            Laporan Keuangan
-          </AdminMenuItem>
+          {isFeatureEnabled("finance") && (
+            <AdminMenuItem to="/dkm/laporan-keuangan" icon={<FaBook />}>
+              Laporan Keuangan
+            </AdminMenuItem>
+          )}
         </nav>
 
         {/* LOGOUT BUTTON */}

@@ -136,7 +136,7 @@ export default function ViewAkunMasjid() {
                         </p>
                         <p className="text-sm text-gray-800 font-medium mt-0.5">
                           {item.location}
-                        </p>
+                        </p>  
                       </div>
                     </div>
 

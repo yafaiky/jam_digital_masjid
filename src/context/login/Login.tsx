@@ -4,6 +4,8 @@ import api from "../../api/axios";
 import { FiUser, FiLock, FiTv, FiSmartphone } from "react-icons/fi";
 import { FaMosque } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { getClientIdFromToken } from "../../utils/jwt";
+import { featuresApi } from "../../services/financeClient";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -34,8 +36,25 @@ export default function Login() {
         device,
       });
 
-      login(res.data.token, res.data.role);
-      navigate(`/${res.data.role}`);
+      const token = res.data.token;
+      const role = res.data.role;
+      const clientId = getClientIdFromToken(token);
+
+      // Fetch features if client ID is available
+      let enabledFeatures: string[] = [];
+      if (clientId) {
+        try {
+          const featuresRes = await featuresApi.getAll(clientId);
+          enabledFeatures = featuresRes.data
+            .filter(f => f.enabled)
+            .map(f => f.feature_key);
+        } catch (featureError) {
+          console.warn("Failed to fetch features:", featureError);
+        }
+      }
+
+      login(token, role, clientId || undefined, enabledFeatures);
+      navigate(`/${role}`);
 
     } catch (err: any) {
       const message =

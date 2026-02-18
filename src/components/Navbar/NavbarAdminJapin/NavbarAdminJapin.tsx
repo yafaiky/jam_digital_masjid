@@ -3,6 +3,7 @@ import {
   FaListUl,
   FaCog,
   FaSignOutAlt,
+  FaShieldAlt,
 } from "react-icons/fa";
 import { useEffect, useState } from "react";
 
@@ -35,17 +36,21 @@ export default function AdminLayout() {
         {/* TITLE */}
         <h1 className="text-2xl font-bold mb-10 flex items-center gap-2 tracking-wide">
           <img src="/icon.png" alt="logo" className="w-9 mt-1" />
-          Admin DKM
+          Admin JAPIN
         </h1>
 
         {/* MENU */}
         <nav className="flex flex-col gap-2 flex-1">
           <AdminJapin to="/admin/create" icon={<FaCog />}>
-            Create Account
+            Buat Akun
           </AdminJapin>
 
           <AdminJapin to="/admin/view" icon={<FaListUl />}>
-            View All Accounts
+            Lihat Akun
+          </AdminJapin>
+
+          <AdminJapin to="/admin/manage-features" icon={<FaShieldAlt />}>
+            Kelola Fitur
           </AdminJapin>
         </nav>
 

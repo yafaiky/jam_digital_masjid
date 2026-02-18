@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Protected from "./routes/RedirectRoot";
 import Login from "./context/login/Login";
 import AdminLogin from "./context/login/loginAdmin";
+import { FeatureGuard } from "./routes/FeatureGuard";
 
 // display
 import DisplayMasjid from "./pages/DisplayMasjidDkm/DashboardJam"
@@ -22,6 +23,7 @@ import LaporanKeuanganMajid from "./pages/adminDkm/LaporanKeuangan/viewFitur";
 // import admin japin
 import CreateAkunMasjid from "./pages/adminJapin/CreateDkm/SetupWizard";
 import ViewAkunMasjid from "./pages/adminJapin/viewAkunMasjid";
+import ManageFeatures from "./pages/adminJapin/ManageFeatures";
 
 // auth context
 import { AuthProvider } from "./context/AuthContext";
@@ -56,7 +58,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="middle" element={<MiddleSetting />} />
           <Route path="hadist" element={<HadistSetting />} />
           <Route path="banner" element={<BannerSetting />} />
-          <Route path="laporan-keuangan" element={<LaporanKeuanganMajid />} />
+          <Route path="laporan-keuangan" element={
+            <FeatureGuard featureKey="finance">
+              <LaporanKeuanganMajid />
+            </FeatureGuard>
+          } />
         </Route>
 
         {/* ADMIN SUPER */}
@@ -68,9 +74,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             </RequireRole>
           }
         >
-          <Route index element={<Navigate to="/admin/create" replace />} /> 
+<Route index element={<Navigate to="/admin/create" replace />} /> 
           <Route path="create" element={<CreateAkunMasjid />} />
           <Route path="view" element={<ViewAkunMasjid />} />
+          <Route path="manage-features" element={<ManageFeatures />} />
         </Route>
 
         {/* DISPLAY */}
